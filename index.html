@@ -7,15 +7,18 @@
   <meta name="description" content="Winkler – Pecl. Profesionální vodoinstalace, topenářství a plynařské práce na Břeclavsku a Hodonínsku." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            navy:   { DEFAULT: '#0d2a4e', 50: '#f0f5fb', 100: '#d6e4f5', 800: '#163d72', 900: '#081a30' },
-            rust:   { DEFAULT: '#e8671a', light: '#f0842e', dark: '#c4540e' },
+            ink:    { DEFAULT: '#0f0f0f', soft: '#1a1a1a' },
+            mid:    { DEFAULT: '#888888', light: '#bbbbbb' },
+            rule:   { DEFAULT: '#e0e0e0', light: '#efefef' },
+            sheet:  { DEFAULT: '#f5f5f5', dark: '#ebebeb' },
+            fire:   { DEFAULT: '#e8671a', light: '#f07830', dark: '#c4550e' },
           },
           fontFamily: { sans: ['Inter', 'sans-serif'] },
         },
@@ -23,414 +26,404 @@
     };
   </script>
   <style>
-    /* ── Pipe decoration system ── */
-    .pipe-h { height: 4px; background: currentColor; position: relative; }
-    .pipe-v { width: 4px;  background: currentColor; position: relative; }
-    .joint {
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
+    /* ── nav link underline ── */
+    .nl::after {
+      content:''; display:block; height:2px; width:0;
+      background:#e8671a; transition:width .22s ease; margin-top:1px;
     }
-    .joint-lg {
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
+    .nl:hover::after, .nl.active::after { width:100%; }
 
-    /* ── Nav ── */
-    .nav-link { position: relative; }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0;
-      width: 0; height: 2px;
-      background: #e8671a;
-      transition: width .25s ease;
-    }
-    .nav-link:hover::after,
-    .nav-link.active::after { width: 100%; }
+    /* ── hamburger ── */
+    .hb span { display:block; width:22px; height:2px; background:#0f0f0f; transition:all .26s; margin:5px 0; }
+    .hb.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .hb.open span:nth-child(2) { opacity:0; }
+    .hb.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
-    /* ── Hamburger ── */
-    .hb span { display: block; width: 22px; height: 2px; background: #0d2a4e; transition: all .28s; margin: 5px 0; }
-    .hb.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hb.open span:nth-child(2) { opacity: 0; }
-    .hb.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    /* ── scroll reveal ── */
+    .rv { opacity:0; transform:translateY(20px); transition:opacity .55s ease, transform .55s ease; }
+    .rv.in { opacity:1; transform:none; }
 
-    /* ── Reveal ── */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* ── Service card ── */
-    .scard { transition: border-color .25s, box-shadow .25s; }
-    .scard:hover { border-color: #e8671a; box-shadow: 0 8px 32px rgba(232,103,26,.12); }
-
-    /* ── Pipe bg svg animation ── */
-    .pipe-draw { stroke-dasharray: 600; stroke-dashoffset: 600; transition: stroke-dashoffset 1.4s ease; }
-    .reveal.visible .pipe-draw { stroke-dashoffset: 0; }
+    /* ── service card hover ── */
+    .sc { transition:border-color .2s, box-shadow .2s; }
+    .sc:hover { border-color:#e8671a; box-shadow:0 4px 24px rgba(232,103,26,.10); }
   </style>
 </head>
-<body class="font-sans bg-white text-navy antialiased">
+<body class="font-sans bg-white text-ink antialiased">
 
 
-<!-- ══════════════════════════════════════════
-     NAVBAR
-══════════════════════════════════════════ -->
-<header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 transition-shadow duration-300">
+<!-- ══════════════════════════
+     NAV
+══════════════════════════ -->
+<header id="nav" class="fixed top-0 inset-x-0 z-50 bg-white/96 backdrop-blur border-b border-rule transition-shadow duration-300">
   <div class="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between h-16">
 
     <!-- Logo -->
     <a href="#domov" class="flex items-center gap-3 group">
-      <!-- Pipe-house icon (SVG from logo) -->
-      <svg width="36" height="36" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- House shape made of pipes -->
-        <!-- Roof left -->
-        <line x1="10" y1="40" x2="40" y2="10" stroke="#0d2a4e" stroke-width="6" stroke-linecap="round"/>
+      <!-- Pipe-house: pipes with elbow/T fittings instead of dots -->
+      <svg width="38" height="38" viewBox="0 0 76 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Pipes (square-cap strokes) -->
+        <!-- Roof left  -->
+        <line x1="9"  y1="38" x2="38" y2="9"  stroke="#0f0f0f" stroke-width="5.5" stroke-linecap="square"/>
         <!-- Roof right -->
-        <line x1="40" y1="10" x2="70" y2="40" stroke="#0d2a4e" stroke-width="6" stroke-linecap="round"/>
-        <!-- Left wall -->
-        <line x1="18" y1="46" x2="18" y2="70" stroke="#0d2a4e" stroke-width="6" stroke-linecap="round"/>
+        <line x1="38" y1="9"  x2="67" y2="38" stroke="#0f0f0f" stroke-width="5.5" stroke-linecap="square"/>
+        <!-- Left wall  -->
+        <line x1="17" y1="45" x2="17" y2="67" stroke="#0f0f0f" stroke-width="5.5" stroke-linecap="square"/>
         <!-- Right wall -->
-        <line x1="62" y1="46" x2="62" y2="70" stroke="#0d2a4e" stroke-width="6" stroke-linecap="round"/>
-        <!-- Floor -->
-        <line x1="18" y1="70" x2="62" y2="70" stroke="#0d2a4e" stroke-width="6" stroke-linecap="round"/>
-        <!-- Joints -->
-        <circle cx="40" cy="10" r="5" fill="#e8671a"/>
-        <circle cx="10" cy="40" r="5" fill="#e8671a"/>
-        <circle cx="70" cy="40" r="5" fill="#e8671a"/>
-        <circle cx="18" cy="46" r="4" fill="#0d2a4e"/>
-        <circle cx="62" cy="46" r="4" fill="#0d2a4e"/>
-        <circle cx="18" cy="70" r="5" fill="#e8671a"/>
-        <circle cx="62" cy="70" r="5" fill="#e8671a"/>
-        <!-- Door -->
-        <rect x="32" y="52" width="16" height="18" rx="1" stroke="#0d2a4e" stroke-width="5" stroke-linecap="round"/>
+        <line x1="59" y1="45" x2="59" y2="67" stroke="#0f0f0f" stroke-width="5.5" stroke-linecap="square"/>
+        <!-- Floor      -->
+        <line x1="17" y1="67" x2="59" y2="67" stroke="#0f0f0f" stroke-width="5.5" stroke-linecap="square"/>
+        <!-- Door frame -->
+        <line x1="30" y1="67" x2="30" y2="50" stroke="#0f0f0f" stroke-width="4" stroke-linecap="square"/>
+        <line x1="46" y1="67" x2="46" y2="50" stroke="#0f0f0f" stroke-width="4" stroke-linecap="square"/>
+        <line x1="30" y1="50" x2="46" y2="50" stroke="#0f0f0f" stroke-width="4" stroke-linecap="square"/>
+
+        <!-- Elbow / T fittings (small rects) — orange highlights -->
+        <!-- Roof apex: T fitting -->
+        <rect x="32" y="5"  width="12" height="8"  rx="1" fill="#e8671a"/>
+        <!-- Roof-wall left (elbow) -->
+        <rect x="11" y="34" width="9"  height="9"  rx="1" fill="#e8671a"/>
+        <!-- Roof-wall right (elbow) -->
+        <rect x="56" y="34" width="9"  height="9"  rx="1" fill="#e8671a"/>
+        <!-- Wall-floor left (elbow) -->
+        <rect x="12" y="62" width="10" height="10" rx="1" fill="#e8671a"/>
+        <!-- Wall-floor right (elbow) -->
+        <rect x="54" y="62" width="10" height="10" rx="1" fill="#e8671a"/>
+        <!-- Door T-fittings (floor level) black -->
+        <rect x="26" y="63" width="8"  height="8"  rx="1" fill="#0f0f0f"/>
+        <rect x="42" y="63" width="8"  height="8"  rx="1" fill="#0f0f0f"/>
+        <!-- Door top elbow fittings -->
+        <rect x="26" y="46" width="7"  height="7"  rx="1" fill="#888"/>
+        <rect x="43" y="46" width="7"  height="7"  rx="1" fill="#888"/>
       </svg>
       <div>
-        <p class="font-black text-navy text-sm leading-none tracking-tight">Winkler – Pecl</p>
-        <p class="text-rust text-[10px] font-semibold tracking-widest uppercase leading-none mt-0.5">Vodo · Topo · Plyn</p>
+        <p class="font-black text-ink text-sm leading-none tracking-tight">Winkler – Pecl</p>
+        <p class="text-fire text-[10px] font-semibold tracking-widest uppercase leading-none mt-0.5">Vodo · Topo · Plyn</p>
       </div>
     </a>
 
     <!-- Desktop nav -->
     <nav class="hidden md:flex items-center gap-7">
-      <a href="#domov"      class="nav-link text-navy/70 hover:text-navy text-sm font-medium transition-colors">Domů</a>
-      <a href="#sluzby"     class="nav-link text-navy/70 hover:text-navy text-sm font-medium transition-colors">Služby</a>
-      <a href="#zkusenosti" class="nav-link text-navy/70 hover:text-navy text-sm font-medium transition-colors">Přednosti</a>
-      <a href="#reference"  class="nav-link text-navy/70 hover:text-navy text-sm font-medium transition-colors">Reference</a>
-      <a href="#kontakt" class="ml-1 px-5 py-2.5 bg-navy hover:bg-navy-800 text-white text-sm font-semibold rounded-lg transition-colors">
+      <a href="#domov"      class="nl text-ink/60 hover:text-ink text-sm font-medium transition-colors">Domů</a>
+      <a href="#sluzby"     class="nl text-ink/60 hover:text-ink text-sm font-medium transition-colors">Služby</a>
+      <a href="#zkusenosti" class="nl text-ink/60 hover:text-ink text-sm font-medium transition-colors">Přednosti</a>
+      <a href="#reference"  class="nl text-ink/60 hover:text-ink text-sm font-medium transition-colors">Reference</a>
+      <a href="#kontakt" class="ml-2 px-5 py-2.5 bg-ink hover:bg-ink-soft text-white text-sm font-semibold rounded-lg transition-colors">
         Kontakt
       </a>
     </nav>
-
-    <!-- Hamburger -->
     <button id="menuBtn" class="hb md:hidden p-1" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white">
-    <nav class="flex flex-col px-5 py-3 gap-1">
-      <a href="#domov"      class="ml py-2.5 px-3 text-navy text-sm font-medium rounded-lg hover:bg-gray-50">Domů</a>
-      <a href="#sluzby"     class="ml py-2.5 px-3 text-navy text-sm font-medium rounded-lg hover:bg-gray-50">Služby</a>
-      <a href="#zkusenosti" class="ml py-2.5 px-3 text-navy text-sm font-medium rounded-lg hover:bg-gray-50">Přednosti</a>
-      <a href="#reference"  class="ml py-2.5 px-3 text-navy text-sm font-medium rounded-lg hover:bg-gray-50">Reference</a>
-      <a href="#kontakt"    class="ml mt-1 py-2.5 px-3 bg-navy text-white text-sm font-semibold rounded-lg text-center">Kontakt</a>
+  <div id="mobileMenu" class="hidden md:hidden border-t border-rule bg-white">
+    <nav class="flex flex-col px-5 py-3 gap-0.5">
+      <a href="#domov"      class="ml py-2.5 px-3 text-ink text-sm rounded-lg hover:bg-sheet">Domů</a>
+      <a href="#sluzby"     class="ml py-2.5 px-3 text-ink text-sm rounded-lg hover:bg-sheet">Služby</a>
+      <a href="#zkusenosti" class="ml py-2.5 px-3 text-ink text-sm rounded-lg hover:bg-sheet">Přednosti</a>
+      <a href="#reference"  class="ml py-2.5 px-3 text-ink text-sm rounded-lg hover:bg-sheet">Reference</a>
+      <a href="#kontakt"    class="ml mt-2 py-2.5 px-3 bg-ink text-white text-sm font-semibold rounded-lg text-center">Kontakt</a>
     </nav>
   </div>
 </header>
 
 
-<!-- ══════════════════════════════════════════
+<!-- ══════════════════════════
      HERO  (#domov)
-══════════════════════════════════════════ -->
-<section id="domov" class="relative min-h-screen flex items-center bg-navy-900 overflow-hidden" style="background-color:#081a30">
+══════════════════════════ -->
+<section id="domov" class="relative min-h-screen flex items-center overflow-hidden" style="background:#0f0f0f">
 
-  <!-- Large pipe illustration — background SVG -->
-  <svg class="absolute inset-0 w-full h-full opacity-[0.07] pointer-events-none" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background pipe network — subtle, with proper elbow/T fittings -->
+  <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" opacity="0.06">
     <!-- Horizontal pipes -->
-    <line x1="0"    y1="200" x2="1200" y2="200" stroke="white" stroke-width="8"/>
-    <line x1="0"    y1="500" x2="1200" y2="500" stroke="white" stroke-width="8"/>
-    <line x1="0"    y1="720" x2="600"  y2="720" stroke="white" stroke-width="5"/>
+    <line x1="0"    y1="180" x2="1200" y2="180" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="0"    y1="520" x2="900"  y2="520" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="300"  y1="680" x2="1200" y2="680" stroke="white" stroke-width="6" stroke-linecap="square"/>
     <!-- Vertical pipes -->
-    <line x1="300"  y1="0"   x2="300"  y2="200" stroke="white" stroke-width="8"/>
-    <line x1="300"  y1="200" x2="300"  y2="500" stroke="white" stroke-width="8"/>
-    <line x1="300"  y1="500" x2="300"  y2="800" stroke="white" stroke-width="8"/>
-    <line x1="700"  y1="200" x2="700"  y2="800" stroke="white" stroke-width="8"/>
-    <line x1="1000" y1="0"   x2="1000" y2="500" stroke="white" stroke-width="8"/>
-    <line x1="500"  y1="500" x2="500"  y2="720" stroke="white" stroke-width="5"/>
-    <!-- Joints -->
-    <circle cx="300"  cy="200" r="14" fill="white"/>
-    <circle cx="700"  cy="200" r="14" fill="white"/>
-    <circle cx="1000" cy="200" r="14" fill="white"/>
-    <circle cx="300"  cy="500" r="14" fill="white"/>
-    <circle cx="700"  cy="500" r="14" fill="white"/>
-    <circle cx="500"  cy="500" r="10" fill="white"/>
-    <circle cx="500"  cy="720" r="10" fill="white"/>
-    <circle cx="300"  cy="720" r="10" fill="white"/>
+    <line x1="300"  y1="0"   x2="300"  y2="800" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="750"  y1="180" x2="750"  y2="520" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="900"  y1="520" x2="900"  y2="800" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="1050" y1="0"   x2="1050" y2="180" stroke="white" stroke-width="6" stroke-linecap="square"/>
+
+    <!-- Elbow fittings (small rects) -->
+    <!-- T at (300, 180) -->
+    <rect x="291" y="171" width="18" height="18" rx="1" fill="white"/>
+    <!-- Elbow at (750, 180) — horizontal + goes down -->
+    <rect x="741" y="171" width="18" height="18" rx="1" fill="white"/>
+    <!-- Elbow at (750, 520) — vertical + goes right to 900 -->
+    <rect x="741" y="511" width="18" height="18" rx="1" fill="white"/>
+    <!-- T at (300, 520) -->
+    <rect x="291" y="511" width="18" height="18" rx="1" fill="white"/>
+    <!-- Elbow at (900, 520) — goes right along 520 + down to 800 -->
+    <rect x="891" y="511" width="18" height="18" rx="1" fill="white"/>
+    <!-- T at (300, 680) — floor pipe from 300 + wall -->
+    <rect x="291" y="671" width="18" height="18" rx="1" fill="white"/>
+    <!-- End cap at (1050,180) — just an elbow -->
+    <rect x="1041" y="171" width="18" height="18" rx="1" fill="white"/>
   </svg>
 
-  <!-- Content -->
-  <div class="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 pt-24 pb-20 grid lg:grid-cols-2 gap-16 items-center">
+  <div class="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 pt-24 pb-20 grid lg:grid-cols-2 gap-16 items-center w-full">
 
     <!-- Left: text -->
     <div>
-      <!-- Pill -->
-      <div class="inline-flex items-center gap-2 mb-8">
-        <span class="flex items-center gap-1.5 text-rust text-xs font-bold tracking-widest uppercase">
-          <span class="w-2 h-2 rounded-full bg-rust animate-pulse"></span>
-          Krumvíř · Břeclavsko · Hodonínsko
-        </span>
-      </div>
+      <p class="text-fire text-xs font-bold uppercase tracking-[.2em] mb-8">
+        Krumvíř · Břeclavsko · Hodonínsko
+      </p>
 
-      <h1 class="text-4xl sm:text-5xl xl:text-6xl font-black text-white leading-[1.08] mb-6">
+      <h1 class="text-5xl sm:text-6xl xl:text-7xl font-black text-white leading-[1.0] mb-7 tracking-tight">
         Poctivé<br/>
-        <span class="text-rust">vodo-topo-</span><br/>
+        <span style="color:#e8671a">vodo-topo-</span><br/>
         plynařské<br/>práce.
       </h1>
 
-      <p class="text-white/60 text-base sm:text-lg leading-relaxed mb-10 max-w-md">
+      <p class="text-white/50 text-base sm:text-lg leading-relaxed mb-10 max-w-md">
         Odbornost prověřená roky praxe a stovkami spokojených domácností na Břeclavsku a Hodonínsku.
       </p>
 
       <div class="flex flex-col sm:flex-row gap-3">
         <a href="#kontakt"
-          class="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-rust hover:bg-rust-light text-white font-bold text-sm rounded-lg transition-colors">
+          class="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-fire hover:bg-fire-light text-white font-bold text-sm rounded-lg transition-colors">
           Poptat realizaci
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
         </a>
         <a href="#sluzby"
-          class="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 hover:border-white/50 text-white/80 hover:text-white font-semibold text-sm rounded-lg transition-colors">
+          class="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/15 hover:border-white/40 text-white/70 hover:text-white font-medium text-sm rounded-lg transition-colors">
           Naše služby
         </a>
       </div>
 
       <!-- Stats -->
-      <div class="mt-12 flex gap-8">
+      <div class="mt-14 flex gap-10">
         <div>
-          <p class="text-3xl font-black text-white">20<span class="text-rust">+</span></p>
-          <p class="text-white/40 text-xs uppercase tracking-wide font-medium mt-1">let praxe</p>
+          <p class="text-4xl font-black text-white leading-none">20<span style="color:#e8671a">+</span></p>
+          <p class="text-white/30 text-[11px] uppercase tracking-widest font-medium mt-1.5">let praxe</p>
         </div>
-        <div class="w-px bg-white/10"></div>
+        <div class="w-px bg-white/8" style="background:rgba(255,255,255,.08)"></div>
         <div>
-          <p class="text-3xl font-black text-white">500<span class="text-rust">+</span></p>
-          <p class="text-white/40 text-xs uppercase tracking-wide font-medium mt-1">realizací</p>
+          <p class="text-4xl font-black text-white leading-none">500<span style="color:#e8671a">+</span></p>
+          <p class="text-white/30 text-[11px] uppercase tracking-widest font-medium mt-1.5">realizací</p>
         </div>
-        <div class="w-px bg-white/10"></div>
+        <div class="w-px" style="background:rgba(255,255,255,.08)"></div>
         <div>
-          <p class="text-3xl font-black text-white">2</p>
-          <p class="text-white/40 text-xs uppercase tracking-wide font-medium mt-1">regiony</p>
+          <p class="text-4xl font-black text-white leading-none">2</p>
+          <p class="text-white/30 text-[11px] uppercase tracking-widest font-medium mt-1.5">regiony</p>
         </div>
       </div>
     </div>
 
-    <!-- Right: big pipe-house illustration -->
+    <!-- Right: pipe-house illustration -->
     <div class="hidden lg:flex items-center justify-center">
-      <svg viewBox="0 0 340 320" width="400" height="380" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-90">
-        <!-- House outline via pipes -->
-        <!-- Roof left -->
-        <line x1="30"  y1="155" x2="170" y2="30"  stroke="white" stroke-width="8" stroke-linecap="round"/>
-        <!-- Roof right -->
-        <line x1="170" y1="30"  x2="310" y2="155" stroke="white" stroke-width="8" stroke-linecap="round"/>
-        <!-- Left wall -->
-        <line x1="55"  y1="172" x2="55"  y2="290" stroke="white" stroke-width="8" stroke-linecap="round"/>
-        <!-- Right wall -->
-        <line x1="285" y1="172" x2="285" y2="290" stroke="white" stroke-width="8" stroke-linecap="round"/>
-        <!-- Floor -->
-        <line x1="55"  y1="290" x2="285" y2="290" stroke="white" stroke-width="8" stroke-linecap="round"/>
-        <!-- Door -->
-        <rect x="143" y="220" width="54" height="70" rx="2" stroke="white" stroke-width="7" stroke-linecap="round"/>
+      <svg viewBox="0 0 360 340" width="420" height="400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Main pipes (white, square linecap) -->
+        <!-- Roof L  --> <line x1="30"  y1="163" x2="180" y2="28"  stroke="white" stroke-width="7" stroke-linecap="square"/>
+        <!-- Roof R  --> <line x1="180" y1="28"  x2="330" y2="163" stroke="white" stroke-width="7" stroke-linecap="square"/>
+        <!-- Wall L  --> <line x1="58"  y1="183" x2="58"  y2="308" stroke="white" stroke-width="7" stroke-linecap="square"/>
+        <!-- Wall R  --> <line x1="302" y1="183" x2="302" y2="308" stroke="white" stroke-width="7" stroke-linecap="square"/>
+        <!-- Floor   --> <line x1="58"  y1="308" x2="302" y2="308" stroke="white" stroke-width="7" stroke-linecap="square"/>
+        <!-- Internal horizontals -->
+        <line x1="58"  y1="225" x2="148" y2="225" stroke="white" stroke-width="4.5" stroke-linecap="square" opacity=".35"/>
+        <line x1="212" y1="225" x2="302" y2="225" stroke="white" stroke-width="4.5" stroke-linecap="square" opacity=".35"/>
+        <!-- Internal verticals -->
+        <line x1="130" y1="183" x2="130" y2="308" stroke="white" stroke-width="4.5" stroke-linecap="square" opacity=".35"/>
+        <line x1="230" y1="183" x2="230" y2="308" stroke="white" stroke-width="4.5" stroke-linecap="square" opacity=".35"/>
 
-        <!-- Internal pipe: horizontal cross -->
-        <line x1="55"  y1="210" x2="143" y2="210" stroke="white" stroke-width="5" stroke-linecap="round" opacity=".45"/>
-        <line x1="197" y1="210" x2="285" y2="210" stroke="white" stroke-width="5" stroke-linecap="round" opacity=".45"/>
-        <!-- Internal vertical -->
-        <line x1="120" y1="172" x2="120" y2="290" stroke="white" stroke-width="5" stroke-linecap="round" opacity=".45"/>
-        <line x1="220" y1="172" x2="220" y2="290" stroke="white" stroke-width="5" stroke-linecap="round" opacity=".45"/>
+        <!-- ORANGE ELBOW FITTINGS at outer corners -->
+        <!-- Roof apex: T fitting -->
+        <rect x="170" y="20"  width="20" height="16" rx="2" fill="#e8671a"/>
+        <!-- Roof-wall L elbow -->
+        <rect x="24"  y="155" width="17" height="17" rx="2" fill="#e8671a"/>
+        <!-- Roof-wall R elbow -->
+        <rect x="319" y="155" width="17" height="17" rx="2" fill="#e8671a"/>
+        <!-- Wall-floor L elbow -->
+        <rect x="50"  y="300" width="17" height="17" rx="2" fill="#e8671a"/>
+        <!-- Wall-floor R elbow -->
+        <rect x="293" y="300" width="17" height="17" rx="2" fill="#e8671a"/>
 
-        <!-- Orange accent joints -->
-        <circle cx="170" cy="30"  r="10" fill="#e8671a"/>
-        <circle cx="30"  cy="155" r="9"  fill="#e8671a"/>
-        <circle cx="310" cy="155" r="9"  fill="#e8671a"/>
-        <circle cx="55"  cy="290" r="9"  fill="#e8671a"/>
-        <circle cx="285" cy="290" r="9"  fill="#e8671a"/>
-        <!-- White joints -->
-        <circle cx="55"  cy="172" r="7"  fill="white"/>
-        <circle cx="285" cy="172" r="7"  fill="white"/>
-        <circle cx="55"  cy="210" r="6"  fill="white" opacity=".5"/>
-        <circle cx="285" cy="210" r="6"  fill="white" opacity=".5"/>
-        <circle cx="120" cy="172" r="6"  fill="white" opacity=".5"/>
-        <circle cx="220" cy="172" r="6"  fill="white" opacity=".5"/>
-        <circle cx="120" cy="210" r="5"  fill="white" opacity=".4"/>
-        <circle cx="220" cy="210" r="5"  fill="white" opacity=".4"/>
-        <circle cx="120" cy="290" r="5"  fill="white" opacity=".4"/>
-        <circle cx="220" cy="290" r="5"  fill="white" opacity=".4"/>
+        <!-- WHITE T-FITTINGS at inner junctions -->
+        <!-- Wall top L -->
+        <rect x="51"  y="176" width="14" height="14" rx="1.5" fill="white" opacity=".7"/>
+        <!-- Wall top R -->
+        <rect x="295" y="176" width="14" height="14" rx="1.5" fill="white" opacity=".7"/>
+        <!-- Internal T-junctions -->
+        <rect x="123" y="176" width="13" height="13" rx="1.5" fill="white" opacity=".4"/>
+        <rect x="223" y="176" width="13" height="13" rx="1.5" fill="white" opacity=".4"/>
+        <rect x="51"  y="218" width="13" height="13" rx="1.5" fill="white" opacity=".3"/>
+        <rect x="295" y="218" width="13" height="13" rx="1.5" fill="white" opacity=".3"/>
+        <rect x="123" y="218" width="11" height="11" rx="1" fill="white" opacity=".25"/>
+        <rect x="223" y="218" width="11" height="11" rx="1" fill="white" opacity=".25"/>
+        <rect x="123" y="300" width="11" height="11" rx="1" fill="white" opacity=".3"/>
+        <rect x="223" y="300" width="11" height="11" rx="1" fill="white" opacity=".3"/>
       </svg>
     </div>
 
   </div>
 
-  <!-- Bottom fade -->
-  <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+  <!-- Bottom fade to white -->
+  <div class="absolute bottom-0 inset-x-0 h-24 pointer-events-none" style="background:linear-gradient(to top, white, transparent)"></div>
 </section>
 
 
-<!-- ══════════════════════════════════════════
-     PIPE DIVIDER (dekorativní trubková linka)
-══════════════════════════════════════════ -->
-<div class="relative bg-white py-0">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8">
-    <div class="flex items-center gap-0 h-10">
-      <div class="joint-lg bg-rust" style="width:20px;height:20px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
-      <div class="flex-1 h-1 bg-gray-100"></div>
-      <div style="width:12px;height:12px;border-radius:50%;background:#d1d5db;flex-shrink:0"></div>
-      <div class="w-24 h-1 bg-gray-100"></div>
-      <div style="width:12px;height:12px;border-radius:50%;background:#d1d5db;flex-shrink:0"></div>
-      <div class="flex-1 h-1 bg-gray-100"></div>
-      <div style="width:20px;height:20px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
-    </div>
+<!-- ══════════════════════════
+     PIPE DIVIDER — full-width horizontal pipe with elbows
+══════════════════════════ -->
+<div class="bg-white overflow-hidden" style="height:48px">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-full flex items-center">
+    <svg width="100%" height="24" viewBox="0 0 1000 24" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Horizontal pipe -->
+      <line x1="12" y1="12" x2="988" y2="12" stroke="#e0e0e0" stroke-width="4" stroke-linecap="square"/>
+      <!-- Left elbow fitting (square) -->
+      <rect x="5"   y="5" width="14" height="14" rx="1.5" fill="#e8671a"/>
+      <!-- Mid T-fitting -->
+      <rect x="493" y="5" width="14" height="14" rx="1.5" fill="#e0e0e0"/>
+      <!-- Right elbow fitting -->
+      <rect x="981" y="5" width="14" height="14" rx="1.5" fill="#e8671a"/>
+    </svg>
   </div>
 </div>
 
 
-<!-- ══════════════════════════════════════════
+<!-- ══════════════════════════
      SLUŽBY  (#sluzby)
-══════════════════════════════════════════ -->
+══════════════════════════ -->
 <section id="sluzby" class="py-24 bg-white">
   <div class="max-w-6xl mx-auto px-5 sm:px-8">
 
-    <div class="mb-14 reveal">
-      <p class="text-rust text-xs font-bold uppercase tracking-widest mb-3">Co děláme</p>
-      <h2 class="text-3xl sm:text-4xl font-black text-navy leading-tight">Kompletní řemeslné služby</h2>
-      <!-- Pipe underline -->
-      <div class="flex items-center gap-0 mt-4">
-        <div style="width:10px;height:10px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
-        <div style="width:80px;height:3px;background:#e8671a"></div>
-        <div style="width:6px;height:6px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
+    <!-- Section header -->
+    <div class="mb-14 rv">
+      <p class="text-fire text-[11px] font-bold uppercase tracking-[.2em] mb-3">Co děláme</p>
+      <h2 class="text-3xl sm:text-4xl font-black text-ink leading-tight">Kompletní řemeslné služby</h2>
+      <!-- Pipe underline with elbow fitting -->
+      <div class="mt-4 flex items-center gap-0" style="height:16px">
+        <svg width="120" height="16" viewBox="0 0 120 16" fill="none">
+          <line x1="6" y1="8" x2="114" y2="8" stroke="#0f0f0f" stroke-width="3.5" stroke-linecap="square"/>
+          <rect x="0"   y="2" width="12" height="12" rx="1.5" fill="#e8671a"/>
+          <rect x="108" y="2" width="12" height="12" rx="1.5" fill="#0f0f0f"/>
+        </svg>
       </div>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6">
+    <div class="grid md:grid-cols-3 gap-5">
 
       <!-- Vodoinstalace -->
-      <div class="scard border border-gray-100 rounded-2xl p-8 reveal">
-        <!-- Pipe icon header -->
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-            <!-- Pipe drop icon -->
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="14" y1="4" x2="14" y2="10" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="6"  y1="14" x2="14" y2="14" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="14" y1="14" x2="22" y2="14" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="14" cy="10" r="2.5" fill="#2563eb"/>
-              <circle cx="6"  cy="14" r="2"   fill="#2563eb"/>
-              <circle cx="22" cy="14" r="2"   fill="#2563eb"/>
-              <path d="M10 18 Q14 24 18 18" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            </svg>
-          </div>
-          <div class="flex-1 h-0.5 bg-blue-50"></div>
+      <div class="sc border border-rule rounded-2xl p-8 rv">
+        <!-- Pipe icon: water drop from pipe -->
+        <div class="mb-6">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Horizontal supply pipe -->
+            <line x1="4"  y1="16" x2="24" y2="16" stroke="#0f0f0f" stroke-width="4.5" stroke-linecap="square"/>
+            <!-- T-fitting at junction -->
+            <rect x="19" y="11" width="10" height="10" rx="1" fill="#0f0f0f"/>
+            <!-- Vertical pipe going down -->
+            <line x1="24" y1="21" x2="24" y2="30" stroke="#0f0f0f" stroke-width="4.5" stroke-linecap="square"/>
+            <!-- Elbow fitting at bottom of pipe -->
+            <rect x="19.5" y="25" width="9"  height="9"  rx="1" fill="#0f0f0f"/>
+            <!-- Water drop shape below elbow -->
+            <path d="M24 34 Q19 39 19 42 Q19 47 24 47 Q29 47 29 42 Q29 39 24 34Z" fill="#0f0f0f" opacity=".18"/>
+            <path d="M24 34 Q19 39 19 42 Q19 47 24 47 Q29 47 29 42 Q29 39 24 34Z" stroke="#0f0f0f" stroke-width="2" fill="none"/>
+          </svg>
         </div>
-
-        <h3 class="text-lg font-black text-navy uppercase tracking-wide mb-3">Vodoinstalace</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-6">
+        <h3 class="text-base font-black text-ink uppercase tracking-wide mb-3">Vodoinstalace</h3>
+        <p class="text-mid text-sm leading-relaxed mb-6">
           Kompletní rozvody vody a odpadů, rekonstrukce koupelen a instalace zařizovacích předmětů.
         </p>
         <ul class="space-y-2.5">
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#2563eb;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#0f0f0f"/><line x1="10" y1="7" x2="13" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/></svg>
             Rozvody studené i teplé vody
           </li>
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#2563eb;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#0f0f0f"/><line x1="10" y1="7" x2="13" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/></svg>
             Rekonstrukce koupelen
           </li>
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#2563eb;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#0f0f0f"/><line x1="10" y1="7" x2="13" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/></svg>
             Odpadní potrubí a kanalizace
           </li>
         </ul>
       </div>
 
       <!-- Topenářství — highlighted -->
-      <div class="scard border-2 border-rust rounded-2xl p-8 reveal relative overflow-hidden" style="transition-delay:.08s">
-        <div class="absolute top-4 right-4">
-          <span class="text-[10px] font-bold uppercase tracking-wider text-rust bg-rust/10 px-2 py-1 rounded-full">Nejžádanější</span>
+      <div class="sc border-2 border-fire rounded-2xl p-8 rv relative" style="transition-delay:.08s">
+        <span class="absolute top-5 right-5 text-[10px] font-bold uppercase tracking-wider text-fire bg-fire/8 px-2.5 py-1 rounded-full" style="background:rgba(232,103,26,.08)">Nejžádanější</span>
+        <div class="mb-6">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Radiator: horizontal manifolds + vertical sections -->
+            <!-- Top manifold -->
+            <line x1="6"  y1="14" x2="42" y2="14" stroke="#0f0f0f" stroke-width="4.5" stroke-linecap="square"/>
+            <!-- Bottom manifold -->
+            <line x1="6"  y1="34" x2="42" y2="34" stroke="#0f0f0f" stroke-width="4.5" stroke-linecap="square"/>
+            <!-- Vertical sections -->
+            <line x1="14" y1="14" x2="14" y2="34" stroke="#0f0f0f" stroke-width="4"   stroke-linecap="square"/>
+            <line x1="24" y1="14" x2="24" y2="34" stroke="#0f0f0f" stroke-width="4"   stroke-linecap="square"/>
+            <line x1="34" y1="14" x2="34" y2="34" stroke="#0f0f0f" stroke-width="4"   stroke-linecap="square"/>
+            <!-- T-fittings on manifolds (orange) -->
+            <rect x="9"  y="9"  width="10" height="10" rx="1" fill="#e8671a"/>
+            <rect x="19" y="9"  width="10" height="10" rx="1" fill="#e8671a"/>
+            <rect x="29" y="9"  width="10" height="10" rx="1" fill="#e8671a"/>
+            <!-- Bottom T-fittings (dark) -->
+            <rect x="9"  y="29" width="10" height="10" rx="1" fill="#0f0f0f"/>
+            <rect x="19" y="29" width="10" height="10" rx="1" fill="#0f0f0f"/>
+            <rect x="29" y="29" width="10" height="10" rx="1" fill="#0f0f0f"/>
+          </svg>
         </div>
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Radiator pipes -->
-              <line x1="4"  y1="10" x2="24" y2="10" stroke="#e8671a" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="4"  y1="18" x2="24" y2="18" stroke="#e8671a" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="8"  y1="10" x2="8"  y2="18" stroke="#e8671a" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="14" y1="10" x2="14" y2="18" stroke="#e8671a" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="20" y1="10" x2="20" y2="18" stroke="#e8671a" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="4"  cy="10" r="2" fill="#e8671a"/>
-              <circle cx="24" cy="10" r="2" fill="#e8671a"/>
-              <circle cx="4"  cy="18" r="2" fill="#e8671a"/>
-              <circle cx="24" cy="18" r="2" fill="#e8671a"/>
-              <!-- flame hint -->
-              <path d="M14 4 Q16 7 14 8 Q12 7 14 4Z" fill="#e8671a" opacity=".5"/>
-            </svg>
-          </div>
-          <div class="flex-1 h-0.5 bg-rust/20"></div>
-        </div>
-
-        <h3 class="text-lg font-black text-navy uppercase tracking-wide mb-3">Topenářství</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-6">
+        <h3 class="text-base font-black text-ink uppercase tracking-wide mb-3">Topenářství</h3>
+        <p class="text-mid text-sm leading-relaxed mb-6">
           Montáž a servis kotlů, podlahové vytápění, tepelná čerpadla a otopné systémy na klíč.
         </p>
         <ul class="space-y-2.5">
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#e8671a" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#e8671a"/><line x1="10" y1="7" x2="13" y2="7" stroke="#e8671a" stroke-width="2" stroke-linecap="square"/></svg>
             Plynové i elektrokotle
           </li>
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#e8671a" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#e8671a"/><line x1="10" y1="7" x2="13" y2="7" stroke="#e8671a" stroke-width="2" stroke-linecap="square"/></svg>
             Podlahové vytápění
           </li>
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#e8671a" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#e8671a"/><line x1="10" y1="7" x2="13" y2="7" stroke="#e8671a" stroke-width="2" stroke-linecap="square"/></svg>
             Tepelná čerpadla
           </li>
         </ul>
       </div>
 
       <!-- Plyn -->
-      <div class="scard border border-gray-100 rounded-2xl p-8 reveal" style="transition-delay:.16s">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Gas pipe with valve -->
-              <line x1="4"  y1="14" x2="11" y2="14" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="17" y1="14" x2="24" y2="14" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"/>
-              <rect x="11" y="10" width="6" height="8" rx="1.5" stroke="#16a34a" stroke-width="2" fill="none"/>
-              <line x1="14" y1="8" x2="14" y2="10" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="4"  cy="14" r="2" fill="#16a34a"/>
-              <circle cx="24" cy="14" r="2" fill="#16a34a"/>
-              <!-- Flow arrows -->
-              <path d="M20 9 L23 12 L20 12" stroke="#16a34a" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/>
-            </svg>
-          </div>
-          <div class="flex-1 h-0.5 bg-green-50"></div>
+      <div class="sc border border-rule rounded-2xl p-8 rv" style="transition-delay:.16s">
+        <div class="mb-6">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Gas pipe with gate valve -->
+            <!-- Left pipe segment -->
+            <line x1="4"  y1="24" x2="15" y2="24" stroke="#0f0f0f" stroke-width="4.5" stroke-linecap="square"/>
+            <!-- Right pipe segment -->
+            <line x1="33" y1="24" x2="44" y2="24" stroke="#0f0f0f" stroke-width="4.5" stroke-linecap="square"/>
+            <!-- Valve body (gate valve = rect) -->
+            <rect x="15" y="16" width="18" height="16" rx="1.5" stroke="#0f0f0f" stroke-width="3.5" fill="none"/>
+            <!-- Valve handwheel: stem + disc -->
+            <line x1="24" y1="10" x2="24" y2="16" stroke="#0f0f0f" stroke-width="3" stroke-linecap="square"/>
+            <rect x="18" y="6"  width="12" height="5"  rx="1" fill="#0f0f0f"/>
+            <!-- Elbow fittings at pipe-valve junctions -->
+            <rect x="11" y="20" width="8"  height="8"  rx="1" fill="#0f0f0f"/>
+            <rect x="29" y="20" width="8"  height="8"  rx="1" fill="#0f0f0f"/>
+            <!-- Flow arrow -->
+            <line x1="36" y1="36" x2="44" y2="36" stroke="#0f0f0f" stroke-width="2.5" stroke-linecap="square" opacity=".3"/>
+            <path d="M41 32 L46 36 L41 40" stroke="#0f0f0f" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" fill="none" opacity=".3"/>
+          </svg>
         </div>
-
-        <h3 class="text-lg font-black text-navy uppercase tracking-wide mb-3">Plyn</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-6">
+        <h3 class="text-base font-black text-ink uppercase tracking-wide mb-3">Plyn</h3>
+        <p class="text-mid text-sm leading-relaxed mb-6">
           Profesionální instalace plynovodů, revize a zapojení plynových spotřebičů s důrazem na bezpečnost.
         </p>
         <ul class="space-y-2.5">
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#16a34a;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#0f0f0f"/><line x1="10" y1="7" x2="13" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/></svg>
             Instalace plynovodů
           </li>
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#16a34a;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#0f0f0f"/><line x1="10" y1="7" x2="13" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/></svg>
             Revize a tlakové zkoušky
           </li>
-          <li class="flex items-center gap-2.5 text-sm text-gray-600">
-            <div style="width:6px;height:6px;border-radius:50%;background:#16a34a;flex-shrink:0"></div>
+          <li class="flex items-center gap-2.5 text-sm text-ink/70">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="7" x2="5" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/><rect x="4" y="4.5" width="6" height="5" rx="0.5" fill="#0f0f0f"/><line x1="10" y1="7" x2="13" y2="7" stroke="#0f0f0f" stroke-width="2" stroke-linecap="square"/></svg>
             Zapojení spotřebičů
           </li>
         </ul>
@@ -441,100 +434,97 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════
+<!-- ══════════════════════════
+     PIPE DIVIDER 2 — with T-fitting in center
+══════════════════════════ -->
+<div style="background:#f5f5f5; height:48px" class="overflow-hidden">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-full flex items-center">
+    <svg width="100%" height="24" viewBox="0 0 1000 24" preserveAspectRatio="none" fill="none">
+      <line x1="12" y1="12" x2="988" y2="12" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+      <rect x="5"   y="5" width="14" height="14" rx="1.5" fill="#0f0f0f"/>
+      <rect x="245" y="5" width="14" height="14" rx="1.5" fill="#d4d4d4"/>
+      <rect x="493" y="5" width="14" height="14" rx="1.5" fill="#e8671a"/>
+      <rect x="741" y="5" width="14" height="14" rx="1.5" fill="#d4d4d4"/>
+      <rect x="981" y="5" width="14" height="14" rx="1.5" fill="#0f0f0f"/>
+    </svg>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
      PŘEDNOSTI  (#zkusenosti)
-══════════════════════════════════════════ -->
-<section id="zkusenosti" class="py-24 bg-navy-50 relative overflow-hidden" style="background:#f0f5fb">
+══════════════════════════ -->
+<section id="zkusenosti" class="py-24" style="background:#f5f5f5">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
 
-  <!-- Pipe decoration right -->
-  <svg class="absolute right-0 top-0 h-full opacity-[0.06] pointer-events-none" viewBox="0 0 200 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <line x1="100" y1="0"   x2="100" y2="800" stroke="#0d2a4e" stroke-width="12"/>
-    <line x1="100" y1="200" x2="200" y2="200" stroke="#0d2a4e" stroke-width="12"/>
-    <line x1="100" y1="500" x2="200" y2="500" stroke="#0d2a4e" stroke-width="12"/>
-    <circle cx="100" cy="200" r="18" fill="#0d2a4e"/>
-    <circle cx="100" cy="500" r="18" fill="#0d2a4e"/>
-  </svg>
-
-  <div class="relative z-10 max-w-6xl mx-auto px-5 sm:px-8">
-
-    <div class="mb-14 reveal">
-      <p class="text-rust text-xs font-bold uppercase tracking-widest mb-3">Proč my</p>
-      <h2 class="text-3xl sm:text-4xl font-black text-navy leading-tight">Naše přednosti</h2>
-      <div class="flex items-center gap-0 mt-4">
-        <div style="width:10px;height:10px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
-        <div style="width:80px;height:3px;background:#e8671a"></div>
-        <div style="width:6px;height:6px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
+    <div class="mb-14 rv">
+      <p class="text-fire text-[11px] font-bold uppercase tracking-[.2em] mb-3">Proč my</p>
+      <h2 class="text-3xl sm:text-4xl font-black text-ink leading-tight">Naše přednosti</h2>
+      <div class="mt-4 flex items-center gap-0" style="height:16px">
+        <svg width="120" height="16" viewBox="0 0 120 16" fill="none">
+          <line x1="6" y1="8" x2="114" y2="8" stroke="#0f0f0f" stroke-width="3.5" stroke-linecap="square"/>
+          <rect x="0"   y="2" width="12" height="12" rx="1.5" fill="#e8671a"/>
+          <rect x="108" y="2" width="12" height="12" rx="1.5" fill="#0f0f0f"/>
+        </svg>
       </div>
     </div>
 
-    <!-- Feature list with pipe connector -->
-    <div class="relative">
+    <!-- Layout: vertical pipe spine on left + feature rows -->
+    <div class="grid md:grid-cols-[auto_1fr] gap-0">
 
-      <!-- Vertical pipe connector (desktop) -->
-      <div class="hidden md:block absolute left-[39px] top-16 bottom-16 w-1 bg-navy/10 z-0"></div>
+      <!-- Left: vertical pipe with T-fittings -->
+      <div class="hidden md:flex flex-col items-center mr-10 pt-5">
+        <!-- Top cap: elbow fitting -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <line x1="16" y1="16" x2="16" y2="32" stroke="#d4d4d4" stroke-width="5" stroke-linecap="square"/>
+          <rect x="8" y="8" width="16" height="16" rx="2" fill="#0f0f0f"/>
+        </svg>
+        <!-- Pipe + T for item 1 -->
+        <div style="width:5px;height:64px;background:#d4d4d4"></div>
+        <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
+          <!-- T fitting (pipe goes right to feature, continues down) -->
+          <line x1="16" y1="0"  x2="16" y2="24" stroke="#d4d4d4" stroke-width="5" stroke-linecap="square"/>
+          <line x1="16" y1="12" x2="32" y2="12" stroke="#d4d4d4" stroke-width="5" stroke-linecap="square"/>
+          <rect x="8"  y="4"  width="16" height="16" rx="2" fill="#e8671a"/>
+        </svg>
+        <!-- Pipe + T for item 2 -->
+        <div style="width:5px;height:64px;background:#d4d4d4"></div>
+        <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
+          <line x1="16" y1="0"  x2="16" y2="24" stroke="#d4d4d4" stroke-width="5" stroke-linecap="square"/>
+          <line x1="16" y1="12" x2="32" y2="12" stroke="#d4d4d4" stroke-width="5" stroke-linecap="square"/>
+          <rect x="8"  y="4"  width="16" height="16" rx="2" fill="#e8671a"/>
+        </svg>
+        <!-- Pipe + bottom elbow for item 3 -->
+        <div style="width:5px;height:64px;background:#d4d4d4"></div>
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <line x1="16" y1="0"  x2="16" y2="16" stroke="#d4d4d4" stroke-width="5" stroke-linecap="square"/>
+          <line x1="16" y1="12" x2="32" y2="12" stroke="#d4d4d4" stroke-width="5" stroke-linecap="square"/>
+          <rect x="8" y="4" width="16" height="16" rx="2" fill="#e8671a"/>
+        </svg>
+      </div>
 
-      <div class="space-y-6">
+      <!-- Right: feature cards -->
+      <div class="space-y-5">
 
-        <!-- Item 1 -->
-        <div class="reveal flex gap-8 items-start">
-          <div class="flex-shrink-0 z-10">
-            <div class="w-20 h-20 rounded-2xl bg-white border-2 border-navy/10 flex flex-col items-center justify-center shadow-sm">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="16" cy="16" r="10" stroke="#0d2a4e" stroke-width="2.5" fill="none"/>
-                <line x1="16" y1="8"  x2="16" y2="16" stroke="#e8671a" stroke-width="2.5" stroke-linecap="round"/>
-                <line x1="16" y1="16" x2="21" y2="19" stroke="#0d2a4e" stroke-width="2.5" stroke-linecap="round"/>
-                <circle cx="16" cy="16" r="2" fill="#e8671a"/>
-              </svg>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl p-7 flex-1 border border-gray-100 shadow-sm">
-            <h3 class="text-base font-black text-navy uppercase tracking-wide mb-2">Dlouholetá praxe</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">
-              Stavíme na pevných základech a zkušenostech, které jsme sbírali <strong class="text-navy">desítky let</strong>. Každá zakázka má svá specifika – a my víme, jak je řešit. Přinášíme osvědčená řešení bez kompromisů.
-            </p>
-          </div>
+        <div class="rv bg-white border border-rule rounded-2xl p-8">
+          <h3 class="text-base font-black text-ink uppercase tracking-wide mb-2">Dlouholetá praxe</h3>
+          <p class="text-mid text-sm leading-relaxed">
+            Stavíme na pevných základech a zkušenostech, které jsme sbírali <strong class="text-ink">desítky let</strong>. Každá zakázka má svá specifika – a my víme, jak je řešit. Přinášíme osvědčená řešení bez kompromisů.
+          </p>
         </div>
 
-        <!-- Item 2 -->
-        <div class="reveal flex gap-8 items-start" style="transition-delay:.1s">
-          <div class="flex-shrink-0 z-10">
-            <div class="w-20 h-20 rounded-2xl bg-white border-2 border-rust/30 flex flex-col items-center justify-center shadow-sm">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Pin + pipes -->
-                <line x1="16" y1="4"  x2="16" y2="12" stroke="#0d2a4e" stroke-width="2.5" stroke-linecap="round"/>
-                <line x1="8"  y1="12" x2="24" y2="12" stroke="#0d2a4e" stroke-width="2.5" stroke-linecap="round"/>
-                <circle cx="16" cy="12" r="2.5" fill="#e8671a"/>
-                <circle cx="8"  cy="12" r="2"   fill="#0d2a4e"/>
-                <circle cx="24" cy="12" r="2"   fill="#0d2a4e"/>
-                <path d="M10 18 Q16 28 22 18" stroke="#e8671a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-              </svg>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl p-7 flex-1 border border-gray-100 shadow-sm">
-            <h3 class="text-base font-black text-navy uppercase tracking-wide mb-2">Lokální partner</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">
-              Sídlíme v <strong class="text-navy">Krumvíři</strong>. Jsme vám nablízku v celém regionu Břeclavska a Hodonínska. Rychlý výjezd a osobní přístup jsou naší samozřejmostí.
-            </p>
-          </div>
+        <div class="rv bg-white border border-rule rounded-2xl p-8" style="transition-delay:.1s">
+          <h3 class="text-base font-black text-ink uppercase tracking-wide mb-2">Lokální partner</h3>
+          <p class="text-mid text-sm leading-relaxed">
+            Sídlíme v <strong class="text-ink">Krumvíři</strong>. Jsme vám nablízku v celém regionu Břeclavska a Hodonínska. Rychlý výjezd a osobní přístup jsou naší samozřejmostí.
+          </p>
         </div>
 
-        <!-- Item 3 -->
-        <div class="reveal flex gap-8 items-start" style="transition-delay:.2s">
-          <div class="flex-shrink-0 z-10">
-            <div class="w-20 h-20 rounded-2xl bg-white border-2 border-navy/10 flex flex-col items-center justify-center shadow-sm">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Badge/shield -->
-                <path d="M16 4 L26 8 V18 Q26 26 16 29 Q6 26 6 18 V8 Z" stroke="#0d2a4e" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
-                <path d="M11 16 L14.5 19.5 L21 13" stroke="#e8671a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl p-7 flex-1 border border-gray-100 shadow-sm">
-            <h3 class="text-base font-black text-navy uppercase tracking-wide mb-2">Vysoká odbornost</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">
-              Pravidelně se školíme v nejnovějších technologiích a materiálech. Pracujeme s <strong class="text-navy">certifikovanými výrobky</strong> a dodržujeme všechny normy a předpisy ČSN.
-            </p>
-          </div>
+        <div class="rv bg-white border border-rule rounded-2xl p-8" style="transition-delay:.2s">
+          <h3 class="text-base font-black text-ink uppercase tracking-wide mb-2">Vysoká odbornost</h3>
+          <p class="text-mid text-sm leading-relaxed">
+            Pravidelně se školíme v nejnovějších technologiích a materiálech. Pracujeme s <strong class="text-ink">certifikovanými výrobky</strong> a dodržujeme všechny normy ČSN.
+          </p>
         </div>
 
       </div>
@@ -544,163 +534,152 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════
-     PIPE DIVIDER 2
-══════════════════════════════════════════ -->
-<div class="bg-white py-0">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8">
-    <div class="flex items-center gap-0 h-10">
-      <div style="width:20px;height:20px;border-radius:50%;background:#0d2a4e;flex-shrink:0"></div>
-      <div class="w-12 h-1 bg-gray-100"></div>
-      <div style="width:10px;height:10px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
-      <div class="flex-1 h-1 bg-gray-100"></div>
-      <div style="width:10px;height:10px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
-      <div class="w-12 h-1 bg-gray-100"></div>
-      <div style="width:20px;height:20px;border-radius:50%;background:#0d2a4e;flex-shrink:0"></div>
-    </div>
+<!-- ══════════════════════════
+     PIPE DIVIDER 3
+══════════════════════════ -->
+<div style="background:white; height:48px" class="overflow-hidden">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-full flex items-center">
+    <svg width="100%" height="24" viewBox="0 0 1000 24" preserveAspectRatio="none" fill="none">
+      <line x1="12" y1="12" x2="988" y2="12" stroke="#ebebeb" stroke-width="4" stroke-linecap="square"/>
+      <rect x="5"   y="5" width="14" height="14" rx="1.5" fill="#e8671a"/>
+      <rect x="493" y="5" width="14" height="14" rx="1.5" fill="#ebebeb"/>
+      <rect x="981" y="5" width="14" height="14" rx="1.5" fill="#e8671a"/>
+    </svg>
   </div>
 </div>
 
 
-<!-- ══════════════════════════════════════════
+<!-- ══════════════════════════
      REFERENCE  (#reference)
-══════════════════════════════════════════ -->
+══════════════════════════ -->
 <section id="reference" class="py-24 bg-white">
   <div class="max-w-6xl mx-auto px-5 sm:px-8">
 
-    <div class="mb-6 reveal">
-      <p class="text-rust text-xs font-bold uppercase tracking-widest mb-3">Naše práce</p>
-      <h2 class="text-3xl sm:text-4xl font-black text-navy leading-tight">Reference & Oblast působení</h2>
-      <div class="flex items-center gap-0 mt-4">
-        <div style="width:10px;height:10px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
-        <div style="width:80px;height:3px;background:#e8671a"></div>
-        <div style="width:6px;height:6px;border-radius:50%;background:#e8671a;flex-shrink:0"></div>
+    <div class="mb-6 rv">
+      <p class="text-fire text-[11px] font-bold uppercase tracking-[.2em] mb-3">Naše práce</p>
+      <h2 class="text-3xl sm:text-4xl font-black text-ink leading-tight">Reference &amp; Oblast působení</h2>
+      <div class="mt-4 flex items-center gap-0" style="height:16px">
+        <svg width="120" height="16" viewBox="0 0 120 16" fill="none">
+          <line x1="6" y1="8" x2="114" y2="8" stroke="#0f0f0f" stroke-width="3.5" stroke-linecap="square"/>
+          <rect x="0"   y="2" width="12" height="12" rx="1.5" fill="#e8671a"/>
+          <rect x="108" y="2" width="12" height="12" rx="1.5" fill="#0f0f0f"/>
+        </svg>
       </div>
     </div>
 
-    <p class="text-gray-500 max-w-xl mb-10 reveal text-sm leading-relaxed">
-      Realizujeme zakázky v okolí <strong class="text-navy">Krumvíře, Břeclavi, Hodonína</strong> a přilehlých obcí. Každou zakázku dokončíme čistě, včas a na míru vašim potřebám.
+    <p class="text-mid max-w-xl mb-10 rv text-sm leading-relaxed">
+      Realizujeme zakázky v okolí <strong class="text-ink">Krumvíře, Břeclavi, Hodonína</strong> a přilehlých obcí. Každou zakázku dokončíme čistě, včas a na míru.
     </p>
 
     <!-- Region tags -->
-    <div class="flex flex-wrap gap-2 mb-12 reveal">
-      {["Krumvíř","Břeclav","Hodonín","Hustopeče","Mikulov","Kyjov","Strážnice","a okolí"].map(r =>
-        `<span style="padding:6px 14px;border:1.5px solid #d1dae8;border-radius:999px;font-size:12px;font-weight:600;color:#0d2a4e;display:inline-flex;align-items:center;gap:6px">
-          <span style="width:5px;height:5px;border-radius:50%;background:#e8671a;display:inline-block"></span>${r}
-        </span>`
-      ).join('')}
+    <div class="flex flex-wrap gap-2 mb-12 rv">
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink border border-rule rounded-full px-3.5 py-1.5">
+        <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="#e8671a"/></svg>Krumvíř
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink border border-rule rounded-full px-3.5 py-1.5">
+        <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="#e8671a"/></svg>Břeclav
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink border border-rule rounded-full px-3.5 py-1.5">
+        <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="#e8671a"/></svg>Hodonín
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink border border-rule rounded-full px-3.5 py-1.5">
+        <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="#e8671a"/></svg>Hustopeče
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink border border-rule rounded-full px-3.5 py-1.5">
+        <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="#e8671a"/></svg>Mikulov
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink border border-rule rounded-full px-3.5 py-1.5">
+        <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="#e8671a"/></svg>Kyjov
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-mid border border-rule rounded-full px-3.5 py-1.5">
+        a okolí
+      </span>
     </div>
 
-    <script>
-      // Render region tags properly
-      document.addEventListener('DOMContentLoaded', () => {
-        const regions = ["Krumvíř","Břeclav","Hodonín","Hustopeče","Mikulov","Kyjov","Strážnice","a okolí"];
-        const container = document.querySelector('.region-tags');
-        if (container) {
-          container.innerHTML = regions.map(r =>
-            `<span class="region-tag">${r}</span>`
-          ).join('');
-        }
-      });
-    </script>
+    <!-- Photo grid — using pipe-cross as placeholder motif -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 rv">
 
-    <!-- Photo grid -->
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 reveal">
-
-      <!-- Photo slot macro -->
-      <div class="rounded-2xl aspect-[4/3] bg-navy-50 border border-gray-100 flex flex-col items-center justify-center gap-2 group hover:border-rust/40 transition-colors cursor-pointer" style="background:#f0f5fb">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <line x1="4"  y1="18" x2="32" y2="18" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <line x1="18" y1="4"  x2="18" y2="32" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <circle cx="18" cy="18" r="5" stroke="#e8671a" stroke-width="2" fill="none"/>
-          <circle cx="18" cy="18" r="1.5" fill="#e8671a"/>
+      <div class="aspect-[4/3] rounded-2xl bg-sheet border border-rule flex flex-col items-center justify-center gap-2.5 hover:border-ink/30 transition-colors cursor-pointer group">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <!-- Cross pipe fitting -->
+          <line x1="4"  y1="20" x2="36" y2="20" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <line x1="20" y1="4"  x2="20" y2="36" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <rect x="14" y="14" width="12" height="12" rx="1.5" fill="#d4d4d4"/>
         </svg>
-        <span class="text-navy/40 text-xs font-medium">Nová kotelna</span>
+        <span class="text-ink/30 text-xs font-medium">Nová kotelna</span>
       </div>
 
-      <div class="rounded-2xl aspect-[4/3] bg-navy-50 border border-gray-100 flex flex-col items-center justify-center gap-2 group hover:border-rust/40 transition-colors cursor-pointer" style="background:#f0f5fb">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <line x1="4"  y1="18" x2="32" y2="18" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <line x1="18" y1="4"  x2="18" y2="32" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <circle cx="18" cy="18" r="5" stroke="#e8671a" stroke-width="2" fill="none"/>
-          <circle cx="18" cy="18" r="1.5" fill="#e8671a"/>
+      <div class="aspect-[4/3] rounded-2xl bg-sheet border border-rule flex flex-col items-center justify-center gap-2.5 hover:border-ink/30 transition-colors cursor-pointer group">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <line x1="4"  y1="20" x2="36" y2="20" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <line x1="20" y1="4"  x2="20" y2="36" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <rect x="14" y="14" width="12" height="12" rx="1.5" fill="#d4d4d4"/>
         </svg>
-        <span class="text-navy/40 text-xs font-medium">Rekonstrukce koupelny</span>
+        <span class="text-ink/30 text-xs font-medium">Rekonstrukce koupelny</span>
       </div>
 
-      <div class="rounded-2xl aspect-[4/3] bg-navy-50 border border-gray-100 flex flex-col items-center justify-center gap-2 group hover:border-rust/40 transition-colors cursor-pointer" style="background:#f0f5fb">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <line x1="4"  y1="18" x2="32" y2="18" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <line x1="18" y1="4"  x2="18" y2="32" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <circle cx="18" cy="18" r="5" stroke="#e8671a" stroke-width="2" fill="none"/>
-          <circle cx="18" cy="18" r="1.5" fill="#e8671a"/>
+      <div class="aspect-[4/3] rounded-2xl bg-sheet border border-rule flex flex-col items-center justify-center gap-2.5 hover:border-ink/30 transition-colors cursor-pointer group">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <line x1="4"  y1="20" x2="36" y2="20" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <line x1="20" y1="4"  x2="20" y2="36" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <rect x="14" y="14" width="12" height="12" rx="1.5" fill="#d4d4d4"/>
         </svg>
-        <span class="text-navy/40 text-xs font-medium">Rozvody vody</span>
+        <span class="text-ink/30 text-xs font-medium">Rozvody vody</span>
       </div>
 
-      <div class="rounded-2xl aspect-[4/3] bg-navy-50 border border-gray-100 flex flex-col items-center justify-center gap-2 group hover:border-rust/40 transition-colors cursor-pointer" style="background:#f0f5fb">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <line x1="4"  y1="18" x2="32" y2="18" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <line x1="18" y1="4"  x2="18" y2="32" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <circle cx="18" cy="18" r="5" stroke="#e8671a" stroke-width="2" fill="none"/>
-          <circle cx="18" cy="18" r="1.5" fill="#e8671a"/>
+      <div class="aspect-[4/3] rounded-2xl bg-sheet border border-rule flex flex-col items-center justify-center gap-2.5 hover:border-ink/30 transition-colors cursor-pointer group">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <line x1="4"  y1="20" x2="36" y2="20" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <line x1="20" y1="4"  x2="20" y2="36" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <rect x="14" y="14" width="12" height="12" rx="1.5" fill="#d4d4d4"/>
         </svg>
-        <span class="text-navy/40 text-xs font-medium">Podlahové topení</span>
+        <span class="text-ink/30 text-xs font-medium">Podlahové topení</span>
       </div>
 
-      <div class="rounded-2xl aspect-[4/3] bg-navy-50 border border-gray-100 flex flex-col items-center justify-center gap-2 group hover:border-rust/40 transition-colors cursor-pointer" style="background:#f0f5fb">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <line x1="4"  y1="18" x2="32" y2="18" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <line x1="18" y1="4"  x2="18" y2="32" stroke="#0d2a4e" stroke-width="2" stroke-linecap="round" opacity=".25"/>
-          <circle cx="18" cy="18" r="5" stroke="#e8671a" stroke-width="2" fill="none"/>
-          <circle cx="18" cy="18" r="1.5" fill="#e8671a"/>
+      <div class="aspect-[4/3] rounded-2xl bg-sheet border border-rule flex flex-col items-center justify-center gap-2.5 hover:border-ink/30 transition-colors cursor-pointer group">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <line x1="4"  y1="20" x2="36" y2="20" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <line x1="20" y1="4"  x2="20" y2="36" stroke="#d4d4d4" stroke-width="4" stroke-linecap="square"/>
+          <rect x="14" y="14" width="12" height="12" rx="1.5" fill="#d4d4d4"/>
         </svg>
-        <span class="text-navy/40 text-xs font-medium">Plynová instalace</span>
+        <span class="text-ink/30 text-xs font-medium">Plynová instalace</span>
       </div>
 
-      <!-- CTA slot -->
-      <a href="#kontakt" class="rounded-2xl aspect-[4/3] border-2 border-dashed border-rust/30 hover:border-rust hover:bg-rust/5 flex flex-col items-center justify-center gap-3 transition-all cursor-pointer group">
-        <div class="w-10 h-10 rounded-full border-2 border-rust/40 group-hover:border-rust flex items-center justify-center transition-colors">
-          <svg class="w-5 h-5 text-rust" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-          </svg>
-        </div>
-        <div class="text-center px-4">
-          <p class="text-navy font-bold text-xs">Brzy doplníme</p>
-          <p class="text-gray-400 text-xs mt-0.5">fotografie realizací</p>
+      <!-- Add photo CTA -->
+      <a href="#kontakt" class="aspect-[4/3] rounded-2xl border-2 border-dashed border-rule hover:border-fire/50 hover:bg-fire/3 flex flex-col items-center justify-center gap-3 transition-all cursor-pointer group" style="border-style:dashed">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <line x1="4"  y1="14" x2="24" y2="14" stroke="#d4d4d4" stroke-width="3.5" stroke-linecap="square"/>
+          <line x1="14" y1="4"  x2="14" y2="24" stroke="#d4d4d4" stroke-width="3.5" stroke-linecap="square"/>
+          <rect x="10" y="10" width="8" height="8" rx="1" fill="#d4d4d4"/>
+        </svg>
+        <div class="text-center">
+          <p class="text-ink/50 text-xs font-bold">Brzy doplníme</p>
+          <p class="text-ink/25 text-xs">fotografie realizací</p>
         </div>
       </a>
 
     </div>
 
     <!-- Two testimonials -->
-    <div class="grid md:grid-cols-2 gap-5 reveal">
-      <div class="bg-navy-50 rounded-2xl p-6 border border-navy/5" style="background:#f0f5fb">
+    <div class="grid md:grid-cols-2 gap-4 rv">
+      <div class="rounded-2xl p-7 bg-sheet border border-rule">
         <div class="flex gap-0.5 mb-4">
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <span style="color:#f59e0b;font-size:14px">★★★★★</span>
         </div>
-        <p class="text-gray-600 text-sm italic leading-relaxed">"Skvělá práce, rychlý termín a čistota na pracovišti. Rekonstrukci koupelny doporučuji všem sousedům."</p>
+        <p class="text-mid text-sm italic leading-relaxed">"Skvělá práce, rychlý termín a čistota na pracovišti. Rekonstrukci koupelny doporučuji všem sousedům."</p>
         <div class="flex items-center gap-2 mt-4">
-          <div style="width:7px;height:7px;border-radius:50%;background:#e8671a"></div>
-          <p class="text-navy font-semibold text-xs">Spokojený zákazník, Hodonín</p>
+          <svg width="10" height="10" viewBox="0 0 10 10"><rect width="10" height="10" rx="1" fill="#e8671a"/></svg>
+          <p class="text-ink font-semibold text-xs">Spokojený zákazník, Hodonín</p>
         </div>
       </div>
-      <div class="bg-navy-50 rounded-2xl p-6 border border-navy/5" style="background:#f0f5fb">
+      <div class="rounded-2xl p-7 bg-sheet border border-rule">
         <div class="flex gap-0.5 mb-4">
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <span style="color:#f59e0b;font-size:14px">★★★★★</span>
         </div>
-        <p class="text-gray-600 text-sm italic leading-relaxed">"Výměna celého otopného systému proběhla bez problémů. Profesionální přístup od první schůzky až po předání."</p>
+        <p class="text-mid text-sm italic leading-relaxed">"Výměna celého otopného systému proběhla bez problémů. Profesionální přístup od první schůzky až po předání."</p>
         <div class="flex items-center gap-2 mt-4">
-          <div style="width:7px;height:7px;border-radius:50%;background:#e8671a"></div>
-          <p class="text-navy font-semibold text-xs">Spokojený zákazník, Břeclav</p>
+          <svg width="10" height="10" viewBox="0 0 10 10"><rect width="10" height="10" rx="1" fill="#e8671a"/></svg>
+          <p class="text-ink font-semibold text-xs">Spokojený zákazník, Břeclav</p>
         </div>
       </div>
     </div>
@@ -709,144 +688,147 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════
+<!-- ══════════════════════════
      KONTAKT  (#kontakt)
-══════════════════════════════════════════ -->
-<section id="kontakt" class="py-24 bg-navy relative overflow-hidden" style="background-color:#0d2a4e">
+══════════════════════════ -->
+<section id="kontakt" class="py-24 relative overflow-hidden" style="background:#0f0f0f">
 
-  <!-- Pipe bg decoration -->
-  <svg class="absolute inset-0 w-full h-full opacity-[0.05] pointer-events-none" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
-    <line x1="0"    y1="100" x2="400"  y2="100" stroke="white" stroke-width="6"/>
-    <line x1="400"  y1="100" x2="400"  y2="350" stroke="white" stroke-width="6"/>
-    <line x1="400"  y1="350" x2="1200" y2="350" stroke="white" stroke-width="6"/>
-    <line x1="800"  y1="0"   x2="800"  y2="350" stroke="white" stroke-width="6"/>
-    <line x1="800"  y1="350" x2="800"  y2="700" stroke="white" stroke-width="6"/>
-    <circle cx="400" cy="100" r="12" fill="white"/>
-    <circle cx="400" cy="350" r="12" fill="white"/>
-    <circle cx="800" cy="350" r="12" fill="white"/>
+  <!-- Background pipe network — very subtle -->
+  <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-[0.04]" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
+    <line x1="0"   y1="150" x2="500" y2="150" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="500" y1="150" x2="500" y2="400" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="500" y1="400" x2="1200" y2="400" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="850" y1="0"   x2="850" y2="400" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <line x1="850" y1="400" x2="850" y2="700" stroke="white" stroke-width="6" stroke-linecap="square"/>
+    <!-- Fittings -->
+    <rect x="492" y="142" width="16" height="16" rx="1.5" fill="white"/>
+    <rect x="492" y="392" width="16" height="16" rx="1.5" fill="white"/>
+    <rect x="842" y="392" width="16" height="16" rx="1.5" fill="white"/>
   </svg>
 
   <div class="relative z-10 max-w-6xl mx-auto px-5 sm:px-8">
 
-    <div class="text-center mb-14 reveal">
-      <p class="text-rust text-xs font-bold uppercase tracking-widest mb-3">Napište nám</p>
+    <div class="text-center mb-14 rv">
+      <p class="text-fire text-[11px] font-bold uppercase tracking-[.2em] mb-3">Napište nám</p>
       <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight">Máte dotaz nebo zájem<br/>o kalkulaci?</h2>
-      <p class="mt-4 text-white/50 text-sm max-w-md mx-auto">Ozvěte se – rádi poskytneme nezávaznou cenovou nabídku.</p>
+      <!-- Pipe underline centered -->
+      <div class="mt-4 flex items-center justify-center gap-0" style="height:16px">
+        <svg width="140" height="16" viewBox="0 0 140 16" fill="none">
+          <line x1="6" y1="8" x2="134" y2="8" stroke="rgba(255,255,255,.15)" stroke-width="3.5" stroke-linecap="square"/>
+          <rect x="0"   y="2" width="12" height="12" rx="1.5" fill="#e8671a"/>
+          <rect x="64" y="3" width="10" height="10" rx="1" fill="rgba(255,255,255,.2)"/>
+          <rect x="128" y="2" width="12" height="12" rx="1.5" fill="#e8671a"/>
+        </svg>
+      </div>
+      <p class="mt-6 text-white/40 text-sm max-w-md mx-auto">Ozvěte se – rádi poskytneme nezávaznou cenovou nabídku.</p>
     </div>
 
     <div class="grid lg:grid-cols-5 gap-10">
 
       <!-- Form -->
-      <div class="lg:col-span-3 reveal">
+      <div class="lg:col-span-3 rv">
         <form id="contactForm" class="bg-white rounded-2xl p-8 space-y-5">
-
           <div class="grid sm:grid-cols-2 gap-5">
             <div>
-              <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Jméno a příjmení *</label>
+              <label class="block text-[11px] font-bold text-ink/40 uppercase tracking-wider mb-1.5">Jméno a příjmení *</label>
               <input type="text" required placeholder="Jan Novák"
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-navy focus:outline-none focus:border-rust focus:ring-2 focus:ring-rust/20 transition placeholder-gray-300" />
+                class="w-full px-4 py-3 rounded-xl border border-rule text-sm text-ink focus:outline-none focus:border-ink focus:ring-2 focus:ring-ink/10 transition placeholder-ink/20"/>
             </div>
             <div>
-              <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">E-mail *</label>
+              <label class="block text-[11px] font-bold text-ink/40 uppercase tracking-wider mb-1.5">E-mail *</label>
               <input type="email" required placeholder="vas@email.cz"
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-navy focus:outline-none focus:border-rust focus:ring-2 focus:ring-rust/20 transition placeholder-gray-300" />
+                class="w-full px-4 py-3 rounded-xl border border-rule text-sm text-ink focus:outline-none focus:border-ink focus:ring-2 focus:ring-ink/10 transition placeholder-ink/20"/>
             </div>
           </div>
-
           <div>
-            <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Telefon</label>
+            <label class="block text-[11px] font-bold text-ink/40 uppercase tracking-wider mb-1.5">Telefon</label>
             <input type="tel" placeholder="+420 000 000 000"
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-navy focus:outline-none focus:border-rust focus:ring-2 focus:ring-rust/20 transition placeholder-gray-300" />
+              class="w-full px-4 py-3 rounded-xl border border-rule text-sm text-ink focus:outline-none focus:border-ink focus:ring-2 focus:ring-ink/10 transition placeholder-ink/20"/>
           </div>
-
           <div>
-            <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Lokalita / Obec</label>
+            <label class="block text-[11px] font-bold text-ink/40 uppercase tracking-wider mb-1.5">Lokalita / Obec</label>
             <input type="text" placeholder="např. Hodonín, Krumvíř…"
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-navy focus:outline-none focus:border-rust focus:ring-2 focus:ring-rust/20 transition placeholder-gray-300" />
+              class="w-full px-4 py-3 rounded-xl border border-rule text-sm text-ink focus:outline-none focus:border-ink focus:ring-2 focus:ring-ink/10 transition placeholder-ink/20"/>
           </div>
-
           <div>
-            <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Vaše zpráva *</label>
+            <label class="block text-[11px] font-bold text-ink/40 uppercase tracking-wider mb-1.5">Vaše zpráva *</label>
             <textarea required rows="4" placeholder="Popište váš záměr nebo dotaz…"
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-navy focus:outline-none focus:border-rust focus:ring-2 focus:ring-rust/20 transition placeholder-gray-300 resize-none"></textarea>
+              class="w-full px-4 py-3 rounded-xl border border-rule text-sm text-ink focus:outline-none focus:border-ink focus:ring-2 focus:ring-ink/10 transition placeholder-ink/20 resize-none"></textarea>
           </div>
-
           <label class="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" required class="mt-0.5 w-4 h-4 flex-shrink-0" style="accent-color:#e8671a"/>
-            <span class="text-xs text-gray-400 leading-relaxed">Souhlasím se zpracováním osobních údajů za účelem odpovědi na dotaz.</span>
+            <input type="checkbox" required class="mt-0.5 w-4 h-4 flex-shrink-0" style="accent-color:#0f0f0f"/>
+            <span class="text-xs text-mid leading-relaxed">Souhlasím se zpracováním osobních údajů za účelem odpovědi na dotaz.</span>
           </label>
-
           <button type="submit" id="submitBtn"
-            class="w-full py-3.5 bg-rust hover:bg-rust-light text-white font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2">
+            class="w-full py-3.5 bg-fire hover:bg-fire-light text-white font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2">
             Odeslat zprávu
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
           </button>
-
-          <div id="formSuccess" class="hidden text-center py-3">
+          <div id="formSuccess" class="hidden text-center py-2">
             <p class="text-green-600 font-semibold text-sm">Zpráva odeslána. Ozveme se co nejdříve.</p>
           </div>
         </form>
       </div>
 
       <!-- Contact info -->
-      <div class="lg:col-span-2 reveal flex flex-col gap-4" style="transition-delay:.12s">
+      <div class="lg:col-span-2 rv flex flex-col gap-4" style="transition-delay:.1s">
 
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-          <div class="w-11 h-11 rounded-xl bg-rust/20 flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-rust" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <div class="border rounded-2xl p-6 flex items-start gap-4" style="border-color:rgba(255,255,255,.1);background:rgba(255,255,255,.03)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(232,103,26,.15)">
+            <svg class="w-5 h-5" style="color:#e8671a" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
             </svg>
           </div>
           <div>
-            <p class="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1">Telefon</p>
-            <a href="tel:+420000000000" class="text-white font-bold text-base hover:text-rust transition-colors">[Doplňte telefon]</a>
-            <p class="text-white/30 text-xs mt-0.5">Po–Pá 7:00 – 17:00</p>
+            <p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color:rgba(255,255,255,.3)">Telefon</p>
+            <a href="tel:+420000000000" class="text-white font-bold text-base hover:text-fire transition-colors">[Doplňte telefon]</a>
+            <p class="text-xs mt-0.5" style="color:rgba(255,255,255,.25)">Po–Pá 7:00 – 17:00</p>
           </div>
         </div>
 
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-          <div class="w-11 h-11 rounded-xl bg-rust/20 flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-rust" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <div class="border rounded-2xl p-6 flex items-start gap-4" style="border-color:rgba(255,255,255,.1);background:rgba(255,255,255,.03)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(232,103,26,.15)">
+            <svg class="w-5 h-5" style="color:#e8671a" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
             </svg>
           </div>
           <div>
-            <p class="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1">E-mail</p>
-            <a href="mailto:info@winkler-pecl.cz" class="text-white font-bold text-sm hover:text-rust transition-colors break-all">[Doplňte e-mail]</a>
-            <p class="text-white/30 text-xs mt-0.5">Odpovídáme do 24 hod</p>
+            <p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color:rgba(255,255,255,.3)">E-mail</p>
+            <a href="mailto:info@winkler-pecl.cz" class="text-white font-bold text-sm hover:text-fire transition-colors break-all">[Doplňte e-mail]</a>
+            <p class="text-xs mt-0.5" style="color:rgba(255,255,255,.25)">Odpovídáme do 24 hod</p>
           </div>
         </div>
 
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-4">
-          <div class="w-11 h-11 rounded-xl bg-rust/20 flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-rust" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <div class="border rounded-2xl p-6 flex items-start gap-4" style="border-color:rgba(255,255,255,.1);background:rgba(255,255,255,.03)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(232,103,26,.15)">
+            <svg class="w-5 h-5" style="color:#e8671a" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
             </svg>
           </div>
           <div>
-            <p class="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1">Sídlo</p>
-            <p class="text-white font-bold text-sm">Krumvíř</p>
-            <p class="text-white/50 text-xs mt-0.5">Jihomoravský kraj</p>
-            <p class="text-white/30 text-xs">Oblast: Břeclavsko, Hodonínsko</p>
+            <p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color:rgba(255,255,255,.3)">Sídlo</p>
+            <p class="text-white font-bold text-sm">Krumvíř, Jihomoravský kraj</p>
+            <p class="text-xs mt-0.5" style="color:rgba(255,255,255,.25)">Oblast: Břeclavsko &amp; Hodonínsko</p>
           </div>
         </div>
 
-        <!-- Pipe illustration mini -->
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-center">
-          <svg viewBox="0 0 200 80" width="180" fill="none" xmlns="http://www.w3.org/2000/svg" opacity=".5">
-            <line x1="10"  y1="40" x2="60"  y2="40" stroke="white" stroke-width="4" stroke-linecap="round"/>
-            <line x1="60"  y1="40" x2="60"  y2="15" stroke="white" stroke-width="4" stroke-linecap="round"/>
-            <line x1="60"  y1="15" x2="140" y2="15" stroke="white" stroke-width="4" stroke-linecap="round"/>
-            <line x1="140" y1="15" x2="140" y2="40" stroke="white" stroke-width="4" stroke-linecap="round"/>
-            <line x1="140" y1="40" x2="190" y2="40" stroke="white" stroke-width="4" stroke-linecap="round"/>
-            <line x1="100" y1="15" x2="100" y2="65" stroke="white" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="60"  cy="40" r="6" fill="#e8671a"/>
-            <circle cx="140" cy="40" r="6" fill="#e8671a"/>
-            <circle cx="60"  cy="15" r="5" fill="white"/>
-            <circle cx="140" cy="15" r="5" fill="white"/>
-            <circle cx="100" cy="15" r="5" fill="white"/>
-            <circle cx="100" cy="65" r="5" fill="#e8671a"/>
+        <!-- Mini pipe illustration -->
+        <div class="border rounded-2xl p-6 flex items-center justify-center" style="border-color:rgba(255,255,255,.06);background:rgba(255,255,255,.02)">
+          <svg viewBox="0 0 220 80" width="200" fill="none" xmlns="http://www.w3.org/2000/svg" opacity=".4">
+            <line x1="10"  y1="40" x2="60"  y2="40" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+            <line x1="60"  y1="40" x2="60"  y2="15" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+            <line x1="60"  y1="15" x2="160" y2="15" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+            <line x1="160" y1="15" x2="160" y2="40" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+            <line x1="160" y1="40" x2="210" y2="40" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+            <line x1="110" y1="15" x2="110" y2="65" stroke="white" stroke-width="4.5" stroke-linecap="square"/>
+            <!-- Fittings (elbows + T) -->
+            <rect x="53"  y="33" width="14" height="14" rx="1.5" fill="#e8671a"/>
+            <rect x="153" y="33" width="14" height="14" rx="1.5" fill="#e8671a"/>
+            <rect x="53"  y="8"  width="14" height="14" rx="1.5" fill="white"/>
+            <rect x="153" y="8"  width="14" height="14" rx="1.5" fill="white"/>
+            <rect x="103" y="8"  width="14" height="14" rx="1.5" fill="white"/>
+            <rect x="103" y="58" width="14" height="14" rx="1.5" fill="#e8671a"/>
           </svg>
         </div>
 
@@ -856,63 +838,76 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════
+<!-- ══════════════════════════
      FOOTER
-══════════════════════════════════════════ -->
-<footer style="background:#081a30" class="py-10 border-t border-white/5">
+══════════════════════════ -->
+<footer style="background:#0a0a0a" class="pt-12 pb-8 border-t" style2="border-color:rgba(255,255,255,.05)">
   <div class="max-w-6xl mx-auto px-5 sm:px-8">
-    <div class="grid md:grid-cols-3 gap-8 mb-8">
+    <div class="grid md:grid-cols-3 gap-8 mb-10">
 
       <div>
         <div class="flex items-center gap-3 mb-4">
-          <svg width="32" height="32" viewBox="0 0 80 80" fill="none">
-            <line x1="10" y1="40" x2="40" y2="10" stroke="white" stroke-width="6" stroke-linecap="round"/>
-            <line x1="40" y1="10" x2="70" y2="40" stroke="white" stroke-width="6" stroke-linecap="round"/>
-            <line x1="18" y1="46" x2="18" y2="70" stroke="white" stroke-width="6" stroke-linecap="round"/>
-            <line x1="62" y1="46" x2="62" y2="70" stroke="white" stroke-width="6" stroke-linecap="round"/>
-            <line x1="18" y1="70" x2="62" y2="70" stroke="white" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="40" cy="10" r="5" fill="#e8671a"/>
-            <circle cx="18" cy="70" r="5" fill="#e8671a"/>
-            <circle cx="62" cy="70" r="5" fill="#e8671a"/>
-            <rect x="32" y="52" width="16" height="18" rx="1" stroke="white" stroke-width="5"/>
+          <svg width="32" height="32" viewBox="0 0 76 76" fill="none">
+            <line x1="9"  y1="38" x2="38" y2="9"  stroke="white" stroke-width="5.5" stroke-linecap="square"/>
+            <line x1="38" y1="9"  x2="67" y2="38" stroke="white" stroke-width="5.5" stroke-linecap="square"/>
+            <line x1="17" y1="45" x2="17" y2="67" stroke="white" stroke-width="5.5" stroke-linecap="square"/>
+            <line x1="59" y1="45" x2="59" y2="67" stroke="white" stroke-width="5.5" stroke-linecap="square"/>
+            <line x1="17" y1="67" x2="59" y2="67" stroke="white" stroke-width="5.5" stroke-linecap="square"/>
+            <rect x="32" y="5"  width="12" height="8"  rx="1" fill="#e8671a"/>
+            <rect x="11" y="34" width="9"  height="9"  rx="1" fill="#e8671a"/>
+            <rect x="56" y="34" width="9"  height="9"  rx="1" fill="#e8671a"/>
+            <rect x="12" y="62" width="10" height="10" rx="1" fill="#e8671a"/>
+            <rect x="54" y="62" width="10" height="10" rx="1" fill="#e8671a"/>
           </svg>
           <div>
             <p class="text-white font-black text-sm">Winkler – Pecl</p>
-            <p class="text-rust text-[10px] font-semibold tracking-widest uppercase">Vodo · Topo · Plyn</p>
+            <p class="text-fire text-[10px] font-semibold tracking-widest uppercase">Vodo · Topo · Plyn</p>
           </div>
         </div>
-        <p class="text-white/30 text-xs leading-relaxed">Profesionální řemeslné práce. Sídlíme v Krumvíři, obsluhujeme celé Břeclavsko a Hodonínsko.</p>
+        <p class="text-xs leading-relaxed" style="color:rgba(255,255,255,.25)">Profesionální řemeslné práce. Sídlíme v Krumvíři, obsluhujeme celé Břeclavsko a Hodonínsko.</p>
       </div>
 
       <div>
-        <p class="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-4">Navigace</p>
-        <ul class="space-y-2">
-          <a href="#domov"      class="block text-white/40 hover:text-white text-xs transition-colors">Domů</a>
-          <a href="#sluzby"     class="block text-white/40 hover:text-white text-xs transition-colors">Služby</a>
-          <a href="#zkusenosti" class="block text-white/40 hover:text-white text-xs transition-colors">Naše přednosti</a>
-          <a href="#reference"  class="block text-white/40 hover:text-white text-xs transition-colors">Reference</a>
-          <a href="#kontakt"    class="block text-white/40 hover:text-white text-xs transition-colors">Kontakt</a>
+        <p class="text-[10px] font-bold uppercase tracking-wider mb-4" style="color:rgba(255,255,255,.25)">Navigace</p>
+        <ul class="space-y-1.5">
+          <li><a href="#domov"      class="text-xs transition-colors hover:text-white" style="color:rgba(255,255,255,.3)">Domů</a></li>
+          <li><a href="#sluzby"     class="text-xs transition-colors hover:text-white" style="color:rgba(255,255,255,.3)">Služby</a></li>
+          <li><a href="#zkusenosti" class="text-xs transition-colors hover:text-white" style="color:rgba(255,255,255,.3)">Naše přednosti</a></li>
+          <li><a href="#reference"  class="text-xs transition-colors hover:text-white" style="color:rgba(255,255,255,.3)">Reference</a></li>
+          <li><a href="#kontakt"    class="text-xs transition-colors hover:text-white" style="color:rgba(255,255,255,.3)">Kontakt</a></li>
         </ul>
       </div>
 
       <div>
-        <p class="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-4">Služby</p>
-        <ul class="space-y-2">
-          <li class="flex items-center gap-2 text-white/40 text-xs"><span style="width:5px;height:5px;border-radius:50%;background:#2563eb;display:inline-block;flex-shrink:0"></span>Vodoinstalace</li>
-          <li class="flex items-center gap-2 text-white/40 text-xs"><span style="width:5px;height:5px;border-radius:50%;background:#e8671a;display:inline-block;flex-shrink:0"></span>Topenářství</li>
-          <li class="flex items-center gap-2 text-white/40 text-xs"><span style="width:5px;height:5px;border-radius:50%;background:#16a34a;display:inline-block;flex-shrink:0"></span>Plynové instalace</li>
-          <li class="flex items-center gap-2 text-white/40 text-xs"><span style="width:5px;height:5px;border-radius:50%;background:#e8671a;display:inline-block;flex-shrink:0"></span>Tepelná čerpadla</li>
+        <p class="text-[10px] font-bold uppercase tracking-wider mb-4" style="color:rgba(255,255,255,.25)">Služby</p>
+        <ul class="space-y-1.5">
+          <li class="flex items-center gap-2 text-xs" style="color:rgba(255,255,255,.3)">
+            <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="rgba(255,255,255,.2)"/></svg>Vodoinstalace
+          </li>
+          <li class="flex items-center gap-2 text-xs" style="color:rgba(255,255,255,.3)">
+            <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="#e8671a"/></svg>Topenářství
+          </li>
+          <li class="flex items-center gap-2 text-xs" style="color:rgba(255,255,255,.3)">
+            <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="rgba(255,255,255,.2)"/></svg>Plynové instalace
+          </li>
+          <li class="flex items-center gap-2 text-xs" style="color:rgba(255,255,255,.3)">
+            <svg width="8" height="8" viewBox="0 0 8 8"><rect width="8" height="8" rx="1" fill="#e8671a"/></svg>Tepelná čerpadla
+          </li>
         </ul>
       </div>
+
     </div>
 
-    <div class="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <p class="text-white/20 text-xs">&copy; 2025 Winkler – Pecl, Krumvíř. Všechna práva vyhrazena.</p>
-      <div class="flex items-center gap-1">
-        <div style="width:5px;height:5px;border-radius:50%;background:#e8671a"></div>
-        <div style="width:20px;height:1px;background:rgba(255,255,255,.1)"></div>
-        <div style="width:5px;height:5px;border-radius:50%;background:#e8671a"></div>
-      </div>
+    <!-- Bottom bar with pipe decoration -->
+    <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style="border-top:1px solid rgba(255,255,255,.06)">
+      <p class="text-xs" style="color:rgba(255,255,255,.2)">&copy; 2025 Winkler – Pecl, Krumvíř. Všechna práva vyhrazena.</p>
+      <!-- Mini pipe motif -->
+      <svg width="60" height="10" viewBox="0 0 60 10" fill="none">
+        <line x1="5" y1="5" x2="55" y2="5" stroke="rgba(255,255,255,.1)" stroke-width="3" stroke-linecap="square"/>
+        <rect x="0"  y="1" width="8" height="8" rx="1" fill="#e8671a" opacity=".5"/>
+        <rect x="26" y="1" width="8" height="8" rx="1" fill="rgba(255,255,255,.15)"/>
+        <rect x="52" y="1" width="8" height="8" rx="1" fill="#e8671a" opacity=".5"/>
+      </svg>
     </div>
   </div>
 </footer>
@@ -920,7 +915,8 @@
 
 <!-- Back to top -->
 <button id="backToTop" aria-label="Nahoru"
-  class="fixed bottom-6 right-6 z-40 w-11 h-11 bg-rust hover:bg-rust-light text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 opacity-0 translate-y-3 pointer-events-none">
+  class="fixed bottom-6 right-6 z-40 w-11 h-11 text-white rounded-xl shadow-lg flex items-center justify-center transition-all duration-300 opacity-0 translate-y-3 pointer-events-none"
+  style="background:#0f0f0f">
   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
   </svg>
@@ -929,23 +925,23 @@
 
 <script>
   /* Mobile menu */
-  const btn  = document.getElementById('menuBtn');
-  const menu = document.getElementById('mobileMenu');
-  btn.addEventListener('click', () => {
-    menu.classList.toggle('hidden');
-    btn.classList.toggle('open');
+  const menuBtn   = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+    menuBtn.classList.toggle('open');
   });
   document.querySelectorAll('.ml').forEach(l => l.addEventListener('click', () => {
-    menu.classList.add('hidden');
-    btn.classList.remove('open');
+    mobileMenu.classList.add('hidden');
+    menuBtn.classList.remove('open');
   }));
 
   /* Active nav */
-  const sections = document.querySelectorAll('section[id]');
-  const links    = document.querySelectorAll('.nav-link');
+  const secs  = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nl');
   function syncNav() {
     let cur = '';
-    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
     links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + cur));
   }
 
@@ -953,19 +949,17 @@
   const btt = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
     syncNav();
-    if (window.scrollY > 500) {
-      btt.classList.remove('opacity-0','translate-y-3','pointer-events-none');
-    } else {
-      btt.classList.add('opacity-0','translate-y-3','pointer-events-none');
-    }
+    btt.classList.toggle('opacity-0', window.scrollY <= 500);
+    btt.classList.toggle('translate-y-3', window.scrollY <= 500);
+    btt.classList.toggle('pointer-events-none', window.scrollY <= 500);
   }, { passive: true });
   btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   /* Scroll reveal */
   const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }});
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }});
   }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
   /* Form */
   document.getElementById('contactForm').addEventListener('submit', e => {
