@@ -211,20 +211,12 @@
     @media (max-width: 768px) {
       .hero-visual {
         display: flex;
-        position: absolute;
-        right: 5%;
-        top: 50%;
-        transform: translateY(-50%);
-        opacity: 0.12;
-        pointer-events: none;
-        z-index: 1;
+        flex-shrink: 0;
+        align-self: flex-start;
+        margin-top: .5rem;
       }
       .hero-drop-svg {
-        width: 180px;
-        animation: heroFloat 8s 2.8s ease-in-out infinite;
-      }
-      .hero-drop-svg path {
-        stroke: #1A1A1A;
+        width: 90px;
       }
     }
     .hero-tag {
@@ -672,15 +664,13 @@
 
     /* ─── MOBILNÍ OPTIMALIZACE ───────────────────────── */
     @media (max-width: 768px) {
-      /* Hero: kompaktnější, zarovnání na střed */
+      /* Hero: kompaktnější, kapka vpravo vedle textu */
       #hero {
         padding: 88px 5% 56px;
-        flex-direction: column;
-        justify-content: center;
         align-items: flex-start;
-        gap: 0;
+        gap: 1.25rem;
       }
-      .hero-inner { max-width: 100%; }
+      .hero-inner { max-width: none; flex: 1; min-width: 0; }
 
       /* Sekce: menší svislé odsazení */
       #services, #about, #gallery, #contact { padding: 64px 5%; }
