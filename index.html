@@ -172,23 +172,34 @@
       min-height: 100svh;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       padding: 120px 5% 80px;
-      gap: 2rem;
     }
-    .hero-inner { max-width: 620px; position: relative; z-index: 2; flex-shrink: 0; }
+    .hero-inner {
+      width: 100%;
+      max-width: 1100px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Wrapper: h1 vlevo, kapka vpravo — jen tato oblast je řádek */
+    .hero-heading-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero-heading-row h1 { margin-bottom: 0; }
 
     .hero-visual {
-      flex: 1 1 auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      z-index: 2;
+      flex-shrink: 0;
       pointer-events: none;
     }
     .hero-drop-svg {
-      width: min(380px, 32vw);
+      width: min(300px, 28vw);
       height: auto;
       animation: heroFloat 8s 2.8s ease-in-out infinite;
     }
@@ -204,20 +215,17 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-22px); }
     }
-    @media (max-width: 1100px) and (min-width: 769px) {
-      .hero-visual { display: flex; }
-      .hero-drop-svg { width: min(200px, 20vw); }
+    /* Tablet */
+    @media (max-width: 1100px) {
+      .hero-drop-svg { width: min(220px, 22vw); }
     }
+    /* Mobil */
     @media (max-width: 768px) {
-      .hero-visual {
-        display: flex;
-        flex-shrink: 0;
-        align-self: flex-start;
-        margin-top: .5rem;
-      }
-      .hero-drop-svg {
-        width: 90px;
-      }
+      .hero-drop-svg { width: 88px; }
+      .hero-heading-row { gap: 1rem; }
+    }
+    @media (max-width: 400px) {
+      .hero-drop-svg { width: 72px; }
     }
     .hero-tag {
       display: inline-flex;
@@ -664,13 +672,8 @@
 
     /* ─── MOBILNÍ OPTIMALIZACE ───────────────────────── */
     @media (max-width: 768px) {
-      /* Hero: kompaktnější, kapka vpravo vedle textu */
-      #hero {
-        padding: 88px 5% 56px;
-        align-items: flex-start;
-        gap: 1.25rem;
-      }
-      .hero-inner { max-width: none; flex: 1; min-width: 0; }
+      /* Hero: kompaktnější padding */
+      #hero { padding: 88px 5% 56px; }
 
       /* Sekce: menší svislé odsazení */
       #services, #about, #gallery, #contact { padding: 64px 5%; }
@@ -780,7 +783,15 @@
 <section id="hero">
   <div class="hero-inner">
     <div class="hero-tag">Profesionální instalatérství</div>
-    <h1>WP<br><span class="accent-word">Winkler</span><br>Pecl</h1>
+    <div class="hero-heading-row">
+      <h1>WP<br><span class="accent-word">Winkler</span><br>Pecl</h1>
+      <div class="hero-visual" aria-hidden="true">
+        <svg class="hero-drop-svg" viewBox="0 0 200 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100 6 C100 6 16 102 16 152 C16 198 54 228 100 228 C146 228 184 198 184 152 C184 102 100 6 100 6Z"
+                stroke="#1A1A1A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
     <p class="hero-sub">Váš spolehlivý partner pro <strong>Vodo · Topo · Plyn</strong>. Profesionální práce, rychlé termíny, férové ceny.</p>
     <div class="btn-group">
       <a href="#contact" class="btn btn-primary">
@@ -806,13 +817,6 @@
         <div class="stat-label">Spokojených zákazníků</div>
       </div>
     </div>
-  </div>
-
-  <div class="hero-visual" aria-hidden="true">
-    <svg class="hero-drop-svg" viewBox="0 0 200 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M100 6 C100 6 16 102 16 152 C16 198 54 228 100 228 C146 228 184 198 184 152 C184 102 100 6 100 6Z"
-            stroke="#1A1A1A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    </svg>
   </div>
 </section>
 
