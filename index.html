@@ -204,7 +204,29 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-22px); }
     }
-    @media (max-width: 1100px) { .hero-visual { display: none; } }
+    @media (max-width: 1100px) and (min-width: 769px) {
+      .hero-visual { display: flex; }
+      .hero-drop-svg { width: min(200px, 20vw); }
+    }
+    @media (max-width: 768px) {
+      .hero-visual {
+        display: flex;
+        position: absolute;
+        right: 5%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.12;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .hero-drop-svg {
+        width: 180px;
+        animation: heroFloat 8s 2.8s ease-in-out infinite;
+      }
+      .hero-drop-svg path {
+        stroke: #1A1A1A;
+      }
+    }
     .hero-tag {
       display: inline-flex;
       align-items: center;
@@ -632,16 +654,19 @@
     footer a:hover { color: rgba(255,255,255,.8); }
 
     /* ─── SCROLL REVEAL ──────────────────────────────── */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .55s ease, transform .55s ease;
+      will-change: opacity, transform;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); will-change: auto; }
     .reveal-delay-1 { transition-delay: .1s; }
     .reveal-delay-2 { transition-delay: .2s; }
     .reveal-delay-3 { transition-delay: .3s; }
 
-    /* ─── TABLET: menší kapka v hero ─────────────────── */
+    /* ─── TABLET: hero padding ───────────────────────── */
     @media (min-width: 769px) and (max-width: 1100px) {
-      .hero-visual { display: flex; }
-      .hero-drop-svg { width: min(200px, 20vw); }
       #hero { padding: 110px 5% 70px; }
     }
 
@@ -1169,14 +1194,31 @@ nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
 }));
 
 /* ══════════════════════════════════════════════════
-   SCROLL REVEAL
+   SCROLL REVEAL  (IO + scroll fallback pre iOS Safari)
 ══════════════════════════════════════════════════ */
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+const revealEls = Array.from(document.querySelectorAll('.reveal'));
+
+function revealCheck() {
+  const vh = window.innerHeight;
+  revealEls.forEach(el => {
+    if (el.classList.contains('visible')) return;
+    if (el.getBoundingClientRect().top < vh * 0.93) el.classList.add('visible');
   });
-}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+if ('IntersectionObserver' in window) {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.04 });
+  revealEls.forEach(el => obs.observe(el));
+}
+
+/* scroll fallback + initial check */
+window.addEventListener('scroll', revealCheck, { passive: true });
+window.addEventListener('load', revealCheck);
+revealCheck();
 
 /* ══════════════════════════════════════════════════
    LIGHTBOX
