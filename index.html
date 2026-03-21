@@ -36,7 +36,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 10;
+      z-index: 1;
     }
     @media (max-width: 768px) { #pipe-canvas { display: none; } }
 
@@ -136,7 +136,10 @@
     }
 
     /* ─── SECTIONS COMMON ────────────────────────────── */
-    section { position: relative; z-index: 1; }
+    /* Sections must NOT create stacking contexts (no z-index)
+       so canvas (z-index:1) sits above section backgrounds
+       but below content wrappers (z-index:2) */
+    section { position: relative; }
 
     .section-label {
       display: inline-block;
@@ -165,9 +168,39 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 120px 5% 80px;
+      gap: 2rem;
     }
-    .hero-inner { max-width: 680px; }
+    .hero-inner { max-width: 620px; position: relative; z-index: 2; flex-shrink: 0; }
+
+    .hero-visual {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero-drop-svg {
+      width: min(380px, 32vw);
+      height: auto;
+      animation: heroFloat 8s 2.8s ease-in-out infinite;
+    }
+    .hero-drop-svg path {
+      stroke-dasharray: 950;
+      stroke-dashoffset: 950;
+      animation: heroDraw 2s 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes heroDraw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-22px); }
+    }
+    @media (max-width: 1100px) { .hero-visual { display: none; } }
     .hero-tag {
       display: inline-flex;
       align-items: center;
@@ -236,8 +269,9 @@
     @media (max-width: 480px) { .hero-stats { gap: 1.5rem; } }
 
     /* ─── SERVICES ───────────────────────────────────── */
-    #services { padding: 100px 5%; background: var(--light); }
-    .services-header { text-align: center; margin-bottom: 3.5rem; }
+    #services { padding: 100px 5%; background: transparent; position: relative; }
+    #services::before { content: ''; position: absolute; inset: 0; background: var(--light); z-index: 0; pointer-events: none; }
+    .services-header { text-align: center; margin-bottom: 3.5rem; position: relative; z-index: 2; }
     .services-header .section-desc { margin: 0 auto; }
     .services-grid {
       display: grid;
@@ -245,6 +279,8 @@
       gap: 1.5rem;
       max-width: 1100px;
       margin: 0 auto;
+      position: relative;
+      z-index: 2;
     }
     @media (max-width: 768px) { .services-grid { grid-template-columns: 1fr; } }
     @media (min-width: 480px) and (max-width: 768px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -297,6 +333,8 @@
       grid-template-columns: 1fr 1fr;
       gap: 5rem;
       align-items: center;
+      position: relative;
+      z-index: 2;
     }
     @media (max-width: 768px) { .about-inner { grid-template-columns: 1fr; gap: 3rem; } }
 
@@ -347,14 +385,17 @@
     .about-feature-text p { font-size: .82rem; color: var(--gray); line-height: 1.6; }
 
     /* ─── GALLERY ────────────────────────────────────── */
-    #gallery { padding: 100px 5%; background: var(--light); }
-    .gallery-header { text-align: center; margin-bottom: 3rem; }
+    #gallery { padding: 100px 5%; background: transparent; position: relative; }
+    #gallery::before { content: ''; position: absolute; inset: 0; background: var(--light); z-index: 0; pointer-events: none; }
+    .gallery-header { text-align: center; margin-bottom: 3rem; position: relative; z-index: 2; }
     .gallery-grid {
       max-width: 1100px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
+      position: relative;
+      z-index: 2;
     }
     @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 600px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -474,6 +515,8 @@
       grid-template-columns: 1fr 1.3fr;
       gap: 5rem;
       align-items: start;
+      position: relative;
+      z-index: 2;
     }
     @media (max-width: 768px) { .contact-inner { grid-template-columns: 1fr; gap: 3rem; } }
 
@@ -576,7 +619,7 @@
       flex-wrap: wrap;
       font-size: .8rem;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
     .footer-logo { display: flex; align-items: center; gap: .75rem; }
     .footer-logo img { height: 32px; filter: brightness(0) invert(1) opacity(.7); }
@@ -665,6 +708,13 @@
         <div class="stat-label">Spokojených zákazníků</div>
       </div>
     </div>
+  </div>
+
+  <div class="hero-visual" aria-hidden="true">
+    <svg class="hero-drop-svg" viewBox="0 0 200 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 6 C100 6 16 102 16 152 C16 198 54 228 100 228 C146 228 184 198 184 152 C184 102 100 6 100 6Z"
+            stroke="#1A1A1A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
   </div>
 </section>
 
@@ -910,14 +960,16 @@
   let W, H, scrollRatio = 0;
 
   /* Normalised pipe paths – each point [x,y] in 0..1 of viewport */
+  /* startAt = fraction of total scroll where pipe begins drawing (0–1).
+     Spread evenly so one new pipe appears per section. */
   const PIPES = [
-    { pts: [[0,.08],[.18,.08],[.18,.22],[.28,.22],[.28,.42],[.18,.42],[.18,.65],[.35,.65]], startAt: 0 },
-    { pts: [[1,.14],[.72,.14],[.72,.30],[.56,.30],[.56,.56],[.72,.56],[.72,.76],[.54,.76]], startAt: 0.05 },
-    { pts: [[.45,0],[.45,.16],[.65,.16],[.65,.40],[.84,.40],[.84,.54]], startAt: 0.1 },
-    { pts: [[0,.5],[.14,.5],[.14,.36],[.40,.36],[.40,.5],[.62,.5],[.62,.36],[.88,.36],[.88,.56],[1,.56]], startAt: 0.2 },
-    { pts: [[.24,.70],[.24,.84],[.46,.84],[.46,.96],[.70,.96],[.70,.82],[.90,.82],[.90,1]], startAt: 0.35 },
-    { pts: [[0,.30],[.10,.30],[.10,.18],[.24,.18],[.24,.08]], startAt: 0.5 },
-    { pts: [[.78,0],[.78,.20],[.62,.20],[.62,.06]], startAt: 0.65 },
+    { pts: [[0,.08],[.18,.08],[.18,.22],[.28,.22],[.28,.42],[.18,.42],[.18,.65],[.35,.65]], startAt: 0.02 },
+    { pts: [[1,.14],[.72,.14],[.72,.30],[.56,.30],[.56,.56],[.72,.56],[.72,.76],[.54,.76]], startAt: 0.14 },
+    { pts: [[.45,0],[.45,.16],[.65,.16],[.65,.40],[.84,.40],[.84,.54]], startAt: 0.26 },
+    { pts: [[0,.5],[.14,.5],[.14,.36],[.40,.36],[.40,.5],[.62,.5],[.62,.36],[.88,.36],[.88,.56],[1,.56]], startAt: 0.40 },
+    { pts: [[.24,.70],[.24,.84],[.46,.84],[.46,.96],[.70,.96],[.70,.82],[.90,.82],[.90,1]], startAt: 0.54 },
+    { pts: [[0,.30],[.10,.30],[.10,.18],[.24,.18],[.24,.08]], startAt: 0.67 },
+    { pts: [[.78,0],[.78,.20],[.62,.20],[.62,.06]], startAt: 0.80 },
   ];
 
   const pipeProgress = PIPES.map(() => 0);
@@ -930,7 +982,7 @@
   function pipeLen(pts) {
     let l = 0;
     for (let i = 1; i < pts.length; i++)
-      l += Math.hypot(pts[i][0] - pts[i-1][0], pts[i][1] - pts[i-1][1]);
+      l += Math.hypot((pts[i][0] - pts[i-1][0]) * W, (pts[i][1] - pts[i-1][1]) * H);
     return l;
   }
 
@@ -961,8 +1013,8 @@
       const fadeFrom = drawn * 0.82;
       const segMid   = acc + (segDrawn - acc) * 0.5;
       const alpha    = segMid >= fadeFrom
-        ? 0.55 * (1 - (segMid - fadeFrom) / (drawn - fadeFrom + 0.001))
-        : 0.55;
+        ? 0.28 * (1 - (segMid - fadeFrom) / (drawn - fadeFrom + 0.001))
+        : 0.28;
 
       ctx.globalAlpha  = Math.max(0, alpha);
       ctx.strokeStyle  = 'rgb(155,155,155)';
@@ -985,7 +1037,7 @@
       if (acc < drawn - 2) {
         ctx.beginPath();
         ctx.arc(bx, by, 3, 0, Math.PI*2);
-        ctx.fillStyle = 'rgba(140,140,140,0.5)';
+        ctx.fillStyle = 'rgba(140,140,140,0.25)';
         ctx.fill();
       }
     }
@@ -999,8 +1051,10 @@
     const globalT = Math.min(window.scrollY / docH, 1);
 
     PIPES.forEach((pipe, i) => {
-      const local = Math.max(0, Math.min(1, (globalT - pipe.startAt + 0.28) / 0.4));
-      pipeProgress[i] += (local - pipeProgress[i]) * 0.09;
+      /* No pre-offset: pipe starts exactly when scroll reaches startAt.
+         Each pipe draws over 20% of the scroll range. */
+      const local = Math.max(0, Math.min(1, (globalT - pipe.startAt) / 0.20));
+      pipeProgress[i] += (local - pipeProgress[i]) * 0.035; /* slow easing */
       drawPipe(pipe.pts, pipeProgress[i]);
     });
   }
