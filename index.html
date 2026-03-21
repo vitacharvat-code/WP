@@ -111,8 +111,11 @@
       height: 2px;
       background: var(--dark);
       border-radius: 2px;
-      transition: all .3s;
+      transition: transform .3s, opacity .3s;
     }
+    .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     @media (max-width: 768px) {
       .hamburger { display: flex; }
       nav {
@@ -166,6 +169,7 @@
     /* ─── HERO ────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
+      min-height: 100svh;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -266,7 +270,7 @@
     .stat-num { font-size: 2rem; font-weight: 700; color: var(--dark); }
     .stat-num span { color: var(--accent); }
     .stat-label { font-size: .75rem; color: var(--gray); margin-top: .15rem; text-transform: uppercase; letter-spacing: .08em; }
-    @media (max-width: 480px) { .hero-stats { gap: 1.5rem; } }
+    @media (max-width: 480px) { .hero-stats { gap: 1.5rem; margin-top: 2.5rem; padding-top: 1.5rem; } }
 
     /* ─── SERVICES ───────────────────────────────────── */
     #services { padding: 100px 5%; background: transparent; position: relative; }
@@ -628,11 +632,90 @@
     footer a:hover { color: rgba(255,255,255,.8); }
 
     /* ─── SCROLL REVEAL ──────────────────────────────── */
-    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .reveal-delay-1 { transition-delay: .1s; }
     .reveal-delay-2 { transition-delay: .2s; }
     .reveal-delay-3 { transition-delay: .3s; }
+
+    /* ─── TABLET: menší kapka v hero ─────────────────── */
+    @media (min-width: 769px) and (max-width: 1100px) {
+      .hero-visual { display: flex; }
+      .hero-drop-svg { width: min(200px, 20vw); }
+      #hero { padding: 110px 5% 70px; }
+    }
+
+    /* ─── MOBILNÍ OPTIMALIZACE ───────────────────────── */
+    @media (max-width: 768px) {
+      /* Hero: kompaktnější, zarovnání na střed */
+      #hero {
+        padding: 88px 5% 56px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 0;
+      }
+      .hero-inner { max-width: 100%; }
+
+      /* Sekce: menší svislé odsazení */
+      #services, #about, #gallery, #contact { padding: 64px 5%; }
+
+      /* About: badge nepřetéká */
+      .about-img-wrap { padding-bottom: 28px; }
+      .about-badge { right: 12px; bottom: -12px; }
+
+      /* Kontaktní formulář: menší padding */
+      .contact-form { padding: 1.5rem 1.25rem; }
+
+      /* Footer: vertikální layout */
+      footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: .75rem;
+        padding: 2rem 5%;
+      }
+
+      /* Lightbox: šipky blíž krajům */
+      .lb-prev { left: .5rem; }
+      .lb-next { right: .5rem; }
+      .lb-nav { width: 40px; height: 40px; }
+
+      /* Galerie overlay aktivní i na dotyku */
+      .gallery-item:active .gallery-overlay { opacity: 1; }
+    }
+
+    /* ─── MALÝ TELEFON ────────────────────────────────── */
+    @media (max-width: 480px) {
+      h1 { font-size: clamp(2.2rem, 8vw, 2.8rem); }
+      .hero-sub { font-size: .92rem; }
+      .stat-num { font-size: 1.6rem; }
+
+      /* Tlačítka: plná šířka */
+      .btn-group { flex-direction: column; gap: .75rem; }
+      .btn { width: 100%; justify-content: center; }
+
+      /* Nadpisy sekcí */
+      h2.section-title { font-size: clamp(1.55rem, 6vw, 2rem); }
+
+      /* Services: 1 sloupec pod 480px – přepsat double-rule */
+      .services-grid { grid-template-columns: 1fr !important; }
+
+      /* Karta: menší padding */
+      .service-card { padding: 1.75rem 1.5rem; }
+
+      /* About: menší mezera */
+      .about-inner { gap: 2rem; }
+
+      /* Galerie: 2 sloupce zůstávají, ale menší gap */
+      .gallery-grid { gap: 8px; }
+
+      /* Formulář: jednosloupec vždy */
+      .form-row { grid-template-columns: 1fr; }
+
+      /* Kontakt: menší odsazení */
+      .contact-inner { gap: 2.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -1076,8 +1159,14 @@ window.addEventListener('scroll', () => {
 ══════════════════════════════════════════════════ */
 const hamburger = document.getElementById('hamburger');
 const nav       = document.getElementById('nav');
-hamburger.addEventListener('click', () => nav.classList.toggle('open'));
-nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+hamburger.addEventListener('click', () => {
+  nav.classList.toggle('open');
+  hamburger.classList.toggle('active');
+});
+nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  nav.classList.remove('open');
+  hamburger.classList.remove('active');
+}));
 
 /* ══════════════════════════════════════════════════
    SCROLL REVEAL
@@ -1086,7 +1175,7 @@ const obs = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
   });
-}, { threshold: 0.1 });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
 /* ══════════════════════════════════════════════════
